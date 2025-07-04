@@ -30,8 +30,12 @@ internal class GenericExpressionBuilder : AbstractExpressionBuilder
     {
         _expressions.Add(lastParsedExpression);
     }
-    public override Expression Build()
-    {
-        return new Composition(_expressions);
-    }
+
+    public override Expression? Build() => 
+        _expressions.Count switch
+        {
+            0 => null,
+            1 => _expressions[0],
+            _ => new Composition(_expressions)
+        };
 }

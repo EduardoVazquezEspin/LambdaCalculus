@@ -1,29 +1,29 @@
 namespace LambdaCalculus.lambda;
 
-public enum ParseOptions{
-    ParseExpression,
-    ParseLambda
-}
-
 public sealed class ExpressionParser
 {
-    private string _expressionStr;
-    public string ExpressionStr => _expressionStr;
+    private enum ParseOptions{
+        ParseExpression,
+        ParseLambda
+    }
+    
+    private string _expressionStr = null!;
 
     private int _index;
     private bool _hasError;
+    private ParseError? _error;
     private Expression? _lastExpression;
     private AbstractExpressionBuilder? _builder;
     private List<AbstractExpressionBuilder> _queue = null!;
     
     private Dictionary<string, Variable> _globalContext = null!;
-    public Dictionary<string, Variable> GlobalContext => _globalContext;
     
-    public Expression Parse(string expressionStr, ParseOptions options = ParseOptions.ParseExpression)
+    private Expression? Parse(string expressionStr, out ParseError error, ParseOptions options)
     {
         _expressionStr = expressionStr + '\n';
         _index = 0;
         _hasError = false;
+        _error = null;
         _lastExpression = null;
         _globalContext = new Dictionary<string, Variable>();
 
@@ -37,27 +37,32 @@ public sealed class ExpressionParser
         {
             Analyze(_expressionStr[_index]);
         }
+        
+        if (_error is not null)
+        {
+            error = _error;
+            return null;    
+        }
 
         if (_hasError)
         {
-            if (_index == _expressionStr.Length - 1)
-                throw new Exception("Something went wrong while parsing the expression");
-            
-            var first = _expressionStr.Substring(0, _index);
-            var c = _expressionStr[_index];
-            var second = _expressionStr.Substring(_index + 1, _expressionStr.Length - _index - 2);
-            throw new Exception($"Invalid character found in position {_index}:\n{first}<b>{c}</b>{second}");
+            error = new SomethingWentWrong();
+            return null;
         }
 
         if (_queue.Any())
         {
-            
-            throw new Exception("Unfinished expression");
+            error = new UnfinishedExpression();
+            return null;
         }
-        
-        if (_lastExpression == null)
-            throw new Exception("Empty expression");
 
+        if (_lastExpression == null)
+        {
+            error = new EmptyExpression();
+            return null;
+        }
+
+        error = new NoError();
         return _lastExpression;
     }
 
@@ -73,12 +78,15 @@ public sealed class ExpressionParser
                 var expression = _builder.Build();
                 _queue.RemoveAt(_queue.Count - 1);
                 _builder = _queue.Count != 0 ? _queue[^1] : null;
-                if (expression != null)
+                if (expression == null)
                 {
-                    _lastExpression = expression;
-                    _builder?.BackToYou(expression);
+                    _hasError = true;
+                    _error = _queue.Count <= 1 ? new EmptyExpression() : new UnfinishedExpression();
+                    return;
                 }
-                break;
+                _lastExpression = expression;
+                _builder?.BackToYou(expression);
+                return;
             case Flow.ParseExpression:
                 _builder = new GenericExpressionBuilder(_globalContext, _builder);
                 _queue.Add(_builder);
@@ -86,22 +94,48 @@ public sealed class ExpressionParser
             case Flow.ParseLambda:
                 _builder = new LambdaBuilder(_globalContext, _builder);
                 _queue.Add(_builder);
-                break;
+                return;
             case Flow.ParseParenthesis:
                 _builder = new ParenthesisBuilder(_globalContext, _builder);
                 _queue.Add(_builder);
-                break;
+                return;
             case Flow.ParseVariable:
                 _builder = new OldVariableBuilder(_globalContext, _builder);
                 _queue.Add(_builder);
-                break;
+                return;
             case Flow.ParseNewVariable:
                 _builder = new NewVariableBuilder(_globalContext, _builder);
                 _queue.Add(_builder);
-                break;
+                return;
             case Flow.Error:
                 _hasError = true;
+                if (_index == _expressionStr.Length - 1)
+                {
+                    _error = new SomethingWentWrong();
+                    return;
+                }
+                _error = new InvalidCharacter(_expressionStr.Substring(0, _expressionStr.Length-1), _index);
                 return;
         }
+    }
+
+    public Expression? ParseExpression(string expression)
+    {
+        return Parse(expression, out ParseError _, ParseOptions.ParseExpression);
+    }
+
+    public Expression? ParseExpression(string expression, out ParseError error)
+    {
+        return Parse(expression, out error, ParseOptions.ParseExpression);
+    }
+
+    public Expression? ParseLambda(string expression)
+    {
+        return Parse(expression, out ParseError _, ParseOptions.ParseLambda);
+    }
+
+    public Expression? ParseLambda(string expression, out ParseError error)
+    {
+        return Parse(expression, out error, ParseOptions.ParseLambda);
     }
 }
