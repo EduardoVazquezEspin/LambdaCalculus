@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LambdaCalculus", "LambdaCalculus\LambdaCalculus.csproj", "{2391E5E6-A77C-4873-AFFF-16539FFB3CBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LambdaCalculusTests", "LambdaCalculusTests\LambdaCalculusTests.csproj", "{BB74A909-55C2-4309-946D-09C9FBE31E86}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2391E5E6-A77C-4873-AFFF-16539FFB3CBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2391E5E6-A77C-4873-AFFF-16539FFB3CBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2391E5E6-A77C-4873-AFFF-16539FFB3CBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2391E5E6-A77C-4873-AFFF-16539FFB3CBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB74A909-55C2-4309-946D-09C9FBE31E86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB74A909-55C2-4309-946D-09C9FBE31E86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB74A909-55C2-4309-946D-09C9FBE31E86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB74A909-55C2-4309-946D-09C9FBE31E86}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
