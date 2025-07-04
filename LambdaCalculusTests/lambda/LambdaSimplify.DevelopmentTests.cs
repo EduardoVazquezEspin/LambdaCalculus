@@ -4,13 +4,14 @@ namespace LambdaCalculusTests.lambda;
 
 public class LambdaSimplifyDevelopmentTests
 {
-    [TestCase("([{([{λA.A}])}])", "λA.A")]
-    [TestCase("λA.λB.A ([{([{B A}])}])", "λA.λB.A (B A)")]
-    [TestCase("λx.(x x)", "λx.x x")]
-    [TestCase("λx.x (x)", "λx.x x")]
-    [TestCase("λx.λy.λz.(x y) z", "λx.λy.λz.x y z")]
-    [TestCase("[[λx.λy.λz.{{([{([{((x)) [y]}])}]) {z}}}]]", "λx.λy.λz.x y z")]
-    [TestCase("λx.λy.x {λz.y z}", "λx.λy.x λz.y z")]
+    [TestCase("([{([{λA.A}])}])", "λA.A")] // Parenthesis of everything is unnecessary
+    [TestCase("λA.λB.A ([{([{B A}])}])", "λA.λB.A (B A)")] // Parenthesis of parenthesis is unnecessary
+    [TestCase("λx.(x x)", "λx.x x")] // Lambda of Parenthesis is lambda
+    [TestCase("λx.x (x)", "λx.x x")] // Parenthesis of single variable is unnecessary
+    [TestCase("λx.λy.λz.(x y) z", "λx.λy.λz.x y z")] // Composition is left associative
+    [TestCase("λx.λy.x {λz.y z}", "λx.λy.x λz.y z")] // Lambdas extend to the right
+    [TestCase("[λf.f f] {λx.λy.x} (λx.λy.y)", "[λf.f f] {λx.λy.x} λx.λy.y")] // Lambdas extend to the right
+    [TestCase("[[λx.λy.{{([{([{((x)) [y]}])}]) {λz.z}}}]]", "λx.λy.x y λz.z")] // A bit of everything
     public void LambdaSimplify_RunsSuccessfully_AndReturnsSimplerLambda(string expression, string simplified)
     {
         var parser = new ExpressionParser();

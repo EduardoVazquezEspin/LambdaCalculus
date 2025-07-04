@@ -19,6 +19,7 @@ public class Composition : Expression
     {
         _expressions = _expressions.Select(it => it.Simplify()).ToList();
 
+        // Composition is left associative
         if (_expressions[0] is Parenthesis {Expression: Composition childComposition})
         {
             _expressions.RemoveAt(0);
@@ -26,7 +27,7 @@ public class Composition : Expression
             childExpressions.ForEach(expression => expression.Parent = this);
             _expressions = childExpressions.Concat(_expressions).ToList();
         }
-        
+        // Lambdas extend to the right
         if (_expressions[^1] is Parenthesis {Expression: Lambda lambda})
         {
             _expressions.RemoveAt(_expressions.Count - 1);

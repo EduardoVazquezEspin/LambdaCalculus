@@ -30,6 +30,7 @@ public class Lambda : Expression
     {
         _expression = _expression.Simplify();
 
+        // Lambda of Parenthesis is lambda
         if (_expression is Parenthesis innerParenthesis)
             _expression = innerParenthesis.Expression;
         

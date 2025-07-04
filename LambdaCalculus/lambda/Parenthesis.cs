@@ -60,7 +60,7 @@ public class Parenthesis : Expression
 
     public override Expression Simplify()
     {
-        // Global parenthesis of not composition
+        // Parenthesis of everything is unnecessary
         if (Parent == null)
         {
             _expression.Parent = null;
@@ -70,13 +70,14 @@ public class Parenthesis : Expression
 
         _expression = _expression.Simplify();
 
+        // Parenthesis of parenthesis is unnecessary
         if (_expression is Parenthesis innerParenthesis)
         {
             _expression = innerParenthesis.Expression;
             _expression.Parent = this;
         }
             
-
+        // Parenthesis of single variable is unnecessary
         if (_expression is Variable)
         {
             _expression.Parent = Parent;

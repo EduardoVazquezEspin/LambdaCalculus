@@ -26,7 +26,7 @@ Comp(Paren(Comp(X)),Y) = Comp(X Y)
 
 `(x y z ...) a = x y z ... a`
  
-### Lambdas extend to the right
+### ✅ Lambdas extend to the right
 
 Comp(X Paren(Lambda(V))) = Comp(X Lambda(V))
 
@@ -64,3 +64,8 @@ Lambda(Paren(X)) = Lambda(X)
    2) Implementation for lambda is overriden to return its variable
 3) Add Parent injection to constructor
 4) Add Parent injection to builder
+
+# Lambda equivalence
+# Beta Reduction
+# Eta Reduction
+# Console Cryptic Commands implementation
