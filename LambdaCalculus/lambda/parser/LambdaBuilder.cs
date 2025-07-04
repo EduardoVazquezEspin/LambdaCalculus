@@ -99,10 +99,14 @@ internal class LambdaBuilder : AbstractExpressionBuilder
         }
     }
 
-    public override Expression Build()
+    public override Expression? Build(out ParseError? error)
     {
+        error = null;
         if (_variable == null || _expression == null)
-            throw new Exception("Something went wrong");
+        {
+            error = new SomethingWentWrong();
+            return null;
+        }
         var lambda = new Lambda(_variable, _expression, GlobalContext);
         return lambda;
     }

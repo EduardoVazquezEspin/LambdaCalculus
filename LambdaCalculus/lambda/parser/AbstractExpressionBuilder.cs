@@ -2,7 +2,7 @@ namespace LambdaCalculus.lambda;
 
 internal abstract class AbstractExpressionBuilder
 {
-    private AbstractExpressionBuilder? _parent;
+    protected readonly AbstractExpressionBuilder? Parent;
     
     protected readonly Dictionary<string, Variable> GlobalContext;
 
@@ -12,15 +12,15 @@ internal abstract class AbstractExpressionBuilder
         )
     {
         GlobalContext = globalContext;
-        _parent = parent;
+        Parent = parent;
     }
     public abstract Flow Analyze(char c);
 
     public abstract void BackToYou(Expression lastParsedExpression);
-    public abstract Expression? Build();
+    public abstract Expression? Build(out ParseError? error);
 
     protected virtual Variable? GetLocalVariable(string name)
     {
-        return _parent?.GetLocalVariable(name);
+        return Parent?.GetLocalVariable(name);
     }
 }

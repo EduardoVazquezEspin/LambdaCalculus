@@ -75,13 +75,22 @@ public sealed class ExpressionParser
                 _index++;
                 return;
             case Flow.Build:
-                var expression = _builder.Build();
+                var expression = _builder.Build(out var error);
                 _queue.RemoveAt(_queue.Count - 1);
                 _builder = _queue.Count != 0 ? _queue[^1] : null;
-                if (expression == null)
+                if (error is not null && error is not NoError)
                 {
                     _hasError = true;
-                    _error = _queue.Count <= 1 ? new EmptyExpression() : new UnfinishedExpression();
+                    _error = error is FreeVariableBuilder errorBuilder 
+                        ? new FreeVariable(_expressionStr.Substring(0, _expressionStr.Length-1), _index - errorBuilder.Length, _index)
+                        : error;
+                    return;
+                }
+
+                if (expression is null)
+                {
+                    _hasError = true;
+                    _error = new SomethingWentWrong();
                     return;
                 }
                 _lastExpression = expression;

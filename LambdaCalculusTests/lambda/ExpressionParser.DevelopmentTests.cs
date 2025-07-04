@@ -10,10 +10,12 @@ public class ExpressionParserDevelopmentTests
     [TestCase("λx.x")]
     [TestCase("λx.λy.x")]
     [TestCase("λx.λx.x")]
+    [TestCase("λx.(λx.x) x")] // η reduction
     [TestCase("λn.λm.λf.λx.n f (m f x)")]
     [TestCase("λn.λm.λf.λx.n f (m (f x))")]
     [TestCase("[λf.f f] {λx.λy.x} λx.λy.y")]
-    [TestCase("([{λA.A}])")]
+    [TestCase("([{([{λA.A}])}])")]
+    [TestCase("λA.λB.A ([{([{B A}])}])")]
     public void ExpressionParser_ParsesSuccessfully_AndStringifiesEqualToInput(string expression)
     {
         var parser = new ExpressionParser();
@@ -22,16 +24,18 @@ public class ExpressionParserDevelopmentTests
         Assert.That(lambda!.ToString(), Is.EqualTo(expression));
     }
     
+    [TestCase("", typeof(EmptyExpression))]
     [TestCase("λx.",typeof(UnfinishedExpression))]
+    [TestCase("([])",typeof(UnfinishedExpression))]
+    [TestCase("([)]", typeof(UnfinishedExpression))]
     [TestCase("λλx.x]", typeof(InvalidCharacter))]
     [TestCase("λxλ.x]", typeof(InvalidCharacter))]
     [TestCase("λ.x.x]", typeof(InvalidCharacter))]
     [TestCase("λx..x]", typeof(InvalidCharacter))]
     [TestCase("λx.λy.(x]", typeof(InvalidCharacter))]
-    [TestCase("", typeof(EmptyExpression))]
-    [TestCase("([])",typeof(UnfinishedExpression))]
-    [TestCase("([)]", typeof(UnfinishedExpression))]
     [TestCase("([λx.x)]", typeof(InvalidCharacter))]
+    [TestCase("1", typeof(InvalidCharacter))] 
+    [TestCase("λx.x myvariable myothervariable", typeof(FreeVariable))]
     public void ExpressionParser_ParsesUnsuccessfully_ReturnsNullAndError(string expression, Type type)
     {
         var parser = new ExpressionParser();

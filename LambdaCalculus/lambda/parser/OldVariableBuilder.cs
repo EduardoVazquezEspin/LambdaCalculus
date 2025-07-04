@@ -51,7 +51,7 @@ internal class OldVariableBuilder : AbstractExpressionBuilder
             return Flow.Build;
         if (Helpers.IsValidVariableChar(c))
         {
-            _state += c;
+            _text += c;
             return Flow.Continue;
         }
 
@@ -61,11 +61,15 @@ internal class OldVariableBuilder : AbstractExpressionBuilder
 
     public override void BackToYou(Expression lastParsedExpression) { }
 
-    public override Expression? Build()
+    public override Expression? Build(out ParseError? error)
     {
+        error = null;
         var variable = GetLocalVariable(_text);
         if (variable is null)
-            throw new Exception("Invalid free variable");
+        {
+            error = new FreeVariableBuilder{Length = _text.Length};
+            return null;
+        }
         return variable;
     }
 }

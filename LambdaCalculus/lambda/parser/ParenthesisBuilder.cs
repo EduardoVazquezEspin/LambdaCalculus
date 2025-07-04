@@ -74,10 +74,14 @@ internal class ParenthesisBuilder : AbstractExpressionBuilder
         _state = ParenthesisBuilderState.ReadingClosed;
     }
 
-    public override Expression? Build()
+    public override Expression? Build(out ParseError? error)
     {
+        error = null;
         if (_expression == null)
-            throw new Exception("Something went wrong");
+        {
+            error = new UnfinishedExpression();
+            return null;
+        }
         return new Parenthesis(_type, _expression);
     }
 }

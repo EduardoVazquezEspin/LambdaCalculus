@@ -31,11 +31,18 @@ internal class GenericExpressionBuilder : AbstractExpressionBuilder
         _expressions.Add(lastParsedExpression);
     }
 
-    public override Expression? Build() => 
-        _expressions.Count switch
+    public override Expression? Build(out ParseError? error)
+    {
+        error = null;
+        switch (_expressions.Count)
         {
-            0 => null,
-            1 => _expressions[0],
-            _ => new Composition(_expressions)
-        };
+            case 0:
+                error = Parent is null ? new EmptyExpression() : new UnfinishedExpression();
+                return null;
+            case 1:
+                return _expressions[0];
+            default:
+                return new Composition(_expressions);
+        }
+    }
 }
