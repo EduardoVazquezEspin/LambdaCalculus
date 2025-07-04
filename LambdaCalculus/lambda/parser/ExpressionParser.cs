@@ -138,13 +138,13 @@ public sealed class ExpressionParser
         return Parse(expression, out error, ParseOptions.ParseExpression);
     }
 
-    public Expression? ParseLambda(string expression)
+    public Lambda? ParseLambda(string expression)
     {
-        return Parse(expression, out ParseError _, ParseOptions.ParseLambda);
+        return Parse(expression, out ParseError _, ParseOptions.ParseLambda) as Lambda;
     }
 
-    public Expression? ParseLambda(string expression, out ParseError error)
+    public Lambda? ParseLambda(string expression, out ParseError error)
     {
-        return Parse(expression, out error, ParseOptions.ParseLambda);
+        return Parse(expression, out error, ParseOptions.ParseLambda) as Lambda;
     }
 }

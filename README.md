@@ -20,7 +20,7 @@ x => y => x
 
 # SIMPLIFICATIONS
 
-### Composition is left associative
+### ✅ Composition is left associative
 
 Comp(Paren(Comp(X)),Y) = Comp(X Y)   
 
@@ -32,23 +32,29 @@ Comp(X Paren(Lambda(V))) = Comp(X Lambda(V))
 
 `x y z ... (λx.X) = x y z ... λx.X`
 
-### Parenthesis of everything is unnecessary
+### ✅  Parenthesis of everything is unnecessary
 
 GlobalParen(X) = X
 
 `(x y z) = x y z`
 
-### Parenthesis of single variable is unnecessary
+### ✅ Parenthesis of single variable is unnecessary
 
 Paren(V) = V
 
 `...(x)... = ...x...`
 
-### Parenthesis of parenthesis is unnecessary
+### ✅ Parenthesis of parenthesis is unnecessary
 
 Paren(Paren(X)) = Paren(X)
 
 `((X)) = (X)`
+
+### ✅ Lambda of Parenthesis is lambda
+
+Lambda(Paren(X)) = Lambda(X)
+
+`λx.(X) = λx.X`
 
 # ✅ LOCAL CONTEXT
 

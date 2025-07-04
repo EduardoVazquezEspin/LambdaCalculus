@@ -2,16 +2,20 @@ namespace LambdaCalculus.lambda;
 
 public class Variable : Expression
 {
-    private readonly string _name;
-    public string Name => _name;
+    public string Name { get; }
 
     public Variable(string name)
     {
-        _name = name;
+        Name = name;
     }
 
     public override string ToString()
     {
-        return _name;
+        return Name;
+    }
+
+    public override Expression Simplify()
+    {
+        return this;
     }
 }

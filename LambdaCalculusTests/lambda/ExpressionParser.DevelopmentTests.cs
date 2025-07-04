@@ -22,6 +22,7 @@ public class ExpressionParserDevelopmentTests
         var lambda = parser.ParseExpression(expression, out var error);
         Assert.That(error, Is.InstanceOf<NoError>());
         Assert.That(lambda!.ToString(), Is.EqualTo(expression));
+        Assert.True(lambda.IsWellFormatted());
     }
     
     [TestCase("", typeof(EmptyExpression))]

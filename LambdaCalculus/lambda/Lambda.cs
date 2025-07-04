@@ -1,12 +1,12 @@
-#pragma warning disable CS8618
-
 namespace LambdaCalculus.lambda;
 
 public class Lambda : Expression
 {
     private readonly Dictionary<string, Variable> _globalContext;
     private readonly Variable _variable;
-    private readonly Expression _expression;
+    public Variable Variable => _variable;
+    private Expression _expression;
+    public Expression Expression => _expression;
 
     public Lambda(
         Variable variable,
@@ -14,13 +14,32 @@ public class Lambda : Expression
         Dictionary<string, Variable> globalContext
     )
     {
-        _variable = variable; 
+        _variable = variable;
+        _variable.Parent = this;
         _expression = expression;
+        _expression.Parent = this;
         _globalContext = globalContext;
     }
 
     public override string ToString()
     {
         return $"λ{_variable.ToString()}.{_expression.ToString()}";
+    }
+
+    public override Expression Simplify()
+    {
+        _expression = _expression.Simplify();
+
+        if (_expression is Parenthesis innerParenthesis)
+            _expression = innerParenthesis.Expression;
+        
+        _expression.Parent = this;
+        
+        return this;
+    }
+
+    public override bool IsWellFormatted()
+    {
+        return _expression is Variable || _expression.Parent == this && _expression.IsWellFormatted();
     }
 }
