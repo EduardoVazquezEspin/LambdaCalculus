@@ -18,8 +18,7 @@ public class ExpressionParserDevelopmentTests
     [TestCase("λA.λB.A ([{([{B A}])}])")]
     public void ExpressionParser_ParsesSuccessfully_AndStringifiesEqualToInput(string expression)
     {
-        var parser = new ExpressionParser();
-        var lambda = parser.ParseExpression(expression, out var error);
+        var lambda = ExpressionParser.ParseExpression(expression, out var error);
         Assert.That(error, Is.InstanceOf<NoError>());
         Assert.That(lambda!.ToString(), Is.EqualTo(expression));
         Assert.True(lambda.IsWellFormatted());
@@ -39,8 +38,7 @@ public class ExpressionParserDevelopmentTests
     [TestCase("λx.x myvariable myothervariable", typeof(FreeVariable))]
     public void ExpressionParser_ParsesUnsuccessfully_ReturnsNullAndError(string expression, Type type)
     {
-        var parser = new ExpressionParser();
-        var lambda = parser.ParseExpression(expression, out var error);
+        var lambda = ExpressionParser.ParseExpression(expression, out var error);
         Assert.That(error.GetType(), Is.EqualTo(type));
         Assert.Null(lambda);
     }

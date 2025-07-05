@@ -52,11 +52,6 @@ public class Parenthesis : Expression
         _expression = expression;
         expression.Parent = this;
     }
-    
-    public override string ToString()
-    {
-        return _type.GetOpenChar() + _expression.ToString() + _type.GetClosedChar();
-    }
 
     public override Expression Simplify()
     {
@@ -91,5 +86,15 @@ public class Parenthesis : Expression
     {
         var validity =_expression is Variable ||  _expression.Parent == this && _expression.IsWellFormatted();
         return validity;
+    }
+    
+    public override string ToString()
+    {
+        return _type.GetOpenChar() + _expression.ToString() + _type.GetClosedChar();
+    }
+
+    public override string GetHashCode()
+    {
+        return "(" + _expression.GetHashCode() + ")";
     }
 }

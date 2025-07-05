@@ -18,6 +18,8 @@ public sealed class ExpressionParser
     
     private Dictionary<string, Variable> _globalContext = null!;
     
+    private ExpressionParser() { }
+    
     private Expression? Parse(string expressionStr, out ParseError error, ParseOptions options)
     {
         _expressionStr = expressionStr + '\n';
@@ -128,23 +130,23 @@ public sealed class ExpressionParser
         }
     }
 
-    public Expression? ParseExpression(string expression)
+    public static Expression? ParseExpression(string expression)
     {
-        return Parse(expression, out ParseError _, ParseOptions.ParseExpression);
+        return new ExpressionParser().Parse(expression, out ParseError _, ParseOptions.ParseExpression);
     }
 
-    public Expression? ParseExpression(string expression, out ParseError error)
+    public static Expression? ParseExpression(string expression, out ParseError error)
     {
-        return Parse(expression, out error, ParseOptions.ParseExpression);
+        return new ExpressionParser().Parse(expression, out error, ParseOptions.ParseExpression);
     }
 
-    public Lambda? ParseLambda(string expression)
+    public static Lambda? ParseLambda(string expression)
     {
-        return Parse(expression, out ParseError _, ParseOptions.ParseLambda) as Lambda;
+        return new ExpressionParser().Parse(expression, out ParseError _, ParseOptions.ParseLambda) as Lambda;
     }
 
-    public Lambda? ParseLambda(string expression, out ParseError error)
+    public static Lambda? ParseLambda(string expression, out ParseError error)
     {
-        return Parse(expression, out error, ParseOptions.ParseLambda) as Lambda;
+        return new ExpressionParser().Parse(expression, out error, ParseOptions.ParseLambda) as Lambda;
     }
 }

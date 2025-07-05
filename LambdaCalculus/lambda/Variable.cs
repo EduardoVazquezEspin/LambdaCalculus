@@ -18,4 +18,9 @@ public class Variable : Expression
     {
         return this;
     }
+    
+    public override string GetHashCode()
+    {
+        return GetContextSize().ToString();
+    }
 }

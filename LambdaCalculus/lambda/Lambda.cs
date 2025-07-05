@@ -21,11 +21,6 @@ public class Lambda : Expression
         _globalContext = globalContext;
     }
 
-    public override string ToString()
-    {
-        return $"λ{_variable.ToString()}.{_expression.ToString()}";
-    }
-
     public override Expression Simplify()
     {
         _expression = _expression.Simplify();
@@ -42,5 +37,20 @@ public class Lambda : Expression
     public override bool IsWellFormatted()
     {
         return _expression is Variable || _expression.Parent == this && _expression.IsWellFormatted();
+    }
+
+    public override int GetContextSize()
+    {
+        return base.GetContextSize() + 1;
+    }
+
+    public override string ToString()
+    {
+        return $"λ{_variable.ToString()}.{_expression.ToString()}";
+    }
+    
+    public override string GetHashCode()
+    {
+        return $"λ{_expression.GetHashCode()}";
     }
 }

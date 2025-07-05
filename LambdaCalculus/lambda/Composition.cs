@@ -9,12 +9,6 @@ public class Composition : Expression
         _expressions = expressions;
         _expressions.ForEach(it => it.Parent = this);
     }
-
-    public override string ToString()
-    {
-        return string.Join(' ', _expressions.Select(it => it.ToString()));
-    }
-
     public override Expression Simplify()
     {
         _expressions = _expressions.Select(it => it.Simplify()).ToList();
@@ -41,5 +35,15 @@ public class Composition : Expression
     public override bool IsWellFormatted()
     {
         return _expressions.TrueForAll(expression => expression is Variable || expression.Parent == this && expression.IsWellFormatted());
+    }
+
+    public override string ToString()
+    {
+        return string.Join(' ', _expressions.Select(it => it.ToString()));
+    }
+    
+    public override string GetHashCode()
+    {
+        return string.Join(' ', _expressions.Select(it => it.GetHashCode()));
     }
 }

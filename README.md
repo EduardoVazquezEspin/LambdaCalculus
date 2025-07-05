@@ -65,7 +65,7 @@ Lambda(Paren(X)) = Lambda(X)
 3) Add Parent injection to constructor
 4) Add Parent injection to builder
 
-# Lambda equivalence
+# ✅ Lambda equivalence
 # Beta Reduction
-# Eta Reduction
+# Eta Reduction (Do we need to?)
 # Console Cryptic Commands implementation
