@@ -47,7 +47,7 @@ public class Lambda : Expression
         if (composition.Expressions.Count == 2)
         {
             var result = composition.Expressions[0];
-            if (Parent is not Composition)
+            if (Parent is not Composition || result is Variable)
             {
                 result.Parent = Parent;
                 return result;

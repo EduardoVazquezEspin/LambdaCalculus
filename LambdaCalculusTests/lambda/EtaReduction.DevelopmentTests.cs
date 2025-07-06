@@ -14,6 +14,8 @@ public class EtaReductionDevelopmentTests
     [TestCase("λx.λy.(λx.x x) y", "λx.λx.x x")]
     [TestCase("λx.x λy.(λx.x x) y", "λx.x λx.x x")]
     [TestCase("λx.x (λy.(λx.x x) y) x", "λx.x (λx.x x) x")]
+    [TestCase("λa.λx.a λy.x y", "λa.a")]
+    [TestCase("λa.(λb.a λx.(λy.b y) x)", "λa.a")] // Only example that requires the do while loop
     [TestCase("λx.(λx.x) x", "λx.x")] // η reduction
     [TestCase("λx.λy.λz.(x y) z", "λx.x")] // η reduction
     [TestCase("λx.λy.x λz.x y z", "λx.λy.x (x y)")] // A bit of everything
