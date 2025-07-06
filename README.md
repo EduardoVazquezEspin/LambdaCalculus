@@ -67,5 +67,79 @@ Lambda(Paren(X)) = Lambda(X)
 
 # ✅ Lambda equivalence
 # Beta Reduction
-# Eta Reduction (Do we need to?)
+
+Rule for beta reduction:
+
+Composition(Lambda, x, ...(n parameters)) = Composition(Lambda(X = x), ...)
+
+/ = Lambda(X = x) (if n == 0)
+
+Simplify afterwardszy. y z
+
+# ✅ Eta Reduction (Do we need to? Yes) (Can we remove do while loop?)
+
+```λx.Y x = Y``` where Y does not depend on x
+
+Needs a calls parameter in variable
+
+Add as a simplifcation rule
+
+## Child is Composition of 3 or more
+
+```...(Context)...λx.Comp(y1, y2, ..., x)...```
+
+- Context is null (impossible), Parenthesis or Lambda
+
+```λx.Comp(y1, y2, ..., x) = Comp(y1, y2, ...)```
+
+```λy.y (λx.y y y x) λx.λy.x  = λy.y (y y y) λx.λy.x```
+
+```λx.x λy.λx.y y y x   = λx.x λy.y y y```
+
+Note: we need to check if parenthesis is first in composition
+
+```λy.(λx.y y y x) λx.λy.x  = λy.y y y λx.λy.x```
+
+Note: we need to check if last element is lambda'
+
+```λx.(λy.y y) (λy.y y) x = (λy.y y) λy.y y```
+
+- Context is Composition, thus we are in last position
+
+```Comp(z1, z2, ..., λx.Comp(y1, y2, ..., x)) = Comp(z1, z2, ... Paren(y1, y2, ...))```
+
+```λx.λy.x y λz.x y z = λx.λy.x y (x y)```
+
+## Child is Composition of 2 elements and other element is variable
+
+```...(Context)...λx.Comp(y, x)...```
+
+- Context is null (impossible), Lambda, Composition
+
+```...(Context)...λx.Comp(y, x)... = ...(Context)...y...```
+
+```λx.λy.x y = λx.x```
+
+```λx.x λy.x y = λx.x x```
+
+- Context is parenthesis
+
+```...(Context)...[λx.Comp(y, x)]... = ...(Context)...y...```
+
+```λx.(λy.x y) x = λx.x x```
+
+## Child is Composition of 2 elements and other element is parenthesis
+
+```...(Context)...λx.Comp([Y], x)...```
+
+- Context is null (impossible), Lambda, Composition, Parenthesis
+
+```...(Context)...λx.Comp([Y], x)... = ...(Context)...Y...```
+
+```λx.λy.(λx.x x) y = λx.λx.x x```
+
+```λx.x λy.(λx.x x) y = λx.x λx.x x```
+
+```λx.x (λy.(λx.x x) y) x = λx.x (λx.x x) x```
+
 # Console Cryptic Commands implementation

@@ -2,48 +2,54 @@ namespace LambdaCalculus.lambda;
 
 public class Composition : Expression
 {
-    private List<Expression> _expressions;
+    internal List<Expression> Expressions { get; private set; }
 
     public Composition(List<Expression> expressions)
     {
-        _expressions = expressions;
-        _expressions.ForEach(it => it.Parent = this);
+        Expressions = expressions;
+        Expressions.ForEach(it => it.Parent = this);
     }
     public override Expression Simplify()
     {
-        _expressions = _expressions.Select(it => it.Simplify()).ToList();
+        Expressions = Expressions.Select(it => it.Simplify()).ToList();
 
         // Composition is left associative
-        if (_expressions[0] is Parenthesis {Expression: Composition childComposition})
+        if (Expressions[0] is Parenthesis {Expression: Composition childComposition})
         {
-            _expressions.RemoveAt(0);
-            var childExpressions = childComposition._expressions;
+            Expressions.RemoveAt(0);
+            var childExpressions = childComposition.Expressions;
             childExpressions.ForEach(expression => expression.Parent = this);
-            _expressions = childExpressions.Concat(_expressions).ToList();
+            Expressions = childExpressions.Concat(Expressions).ToList();
         }
         // Lambdas extend to the right
-        if (_expressions[^1] is Parenthesis {Expression: Lambda lambda})
+        if (Expressions[^1] is Parenthesis {Expression: Lambda lambda})
         {
-            _expressions.RemoveAt(_expressions.Count - 1);
+            Expressions.RemoveAt(Expressions.Count - 1);
             lambda.Parent = this;
-            _expressions.Add(lambda);
+            Expressions.Add(lambda);
         }
 
         return this;
     }
 
+    internal override Expression EtaReductionRecursive()
+    {
+        Expressions = Expressions.Select(expression => expression.EtaReductionRecursive()).ToList();
+        return this;
+    }
+
     public override bool IsWellFormatted()
     {
-        return _expressions.TrueForAll(expression => expression is Variable || expression.Parent == this && expression.IsWellFormatted());
+        return Expressions.TrueForAll(expression => expression is Variable || expression.Parent == this && expression.IsWellFormatted());
     }
 
     public override string ToString()
     {
-        return string.Join(' ', _expressions.Select(it => it.ToString()));
+        return string.Join(' ', Expressions.Select(it => it.ToString()));
     }
     
     public override string GetHashCode()
     {
-        return string.Join(' ', _expressions.Select(it => it.GetHashCode()));
+        return string.Join(' ', Expressions.Select(it => it.GetHashCode()));
     }
 }

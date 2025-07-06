@@ -70,6 +70,8 @@ internal class OldVariableBuilder : AbstractExpressionBuilder
             error = new FreeVariableBuilder{Length = _text.Length};
             return null;
         }
+
+        variable.Calls++;
         return variable;
     }
 }

@@ -12,13 +12,30 @@ public abstract class Expression
     }
 
     public abstract Expression Simplify();
+    public Expression EtaReduction()
+    {
+        var hashSet = new HashSet<string>();
+        Expression current = this;
+        string currentHashcode = current.GetHashCode();
+        do
+        {
+            hashSet.Add(currentHashcode);
+            current = current.EtaReductionRecursive();
+            current = current.Simplify();
+            currentHashcode = current.GetHashCode();
+        } while (!hashSet.Contains(currentHashcode));
+
+        return current;
+    }
+
+    internal abstract Expression EtaReductionRecursive();
 
     public virtual bool IsWellFormatted()
     {
         return true;
     }
 
-    public virtual int GetContextSize()
+    protected virtual int GetContextSize()
     {
         return Parent?.GetContextSize() ?? 0;
     }

@@ -82,6 +82,12 @@ public class Parenthesis : Expression
         return this;
     }
     
+    internal override Expression EtaReductionRecursive()
+    {
+        _expression = _expression.EtaReductionRecursive();
+        return this;
+    }
+    
     public override bool IsWellFormatted()
     {
         var validity =_expression is Variable ||  _expression.Parent == this && _expression.IsWellFormatted();

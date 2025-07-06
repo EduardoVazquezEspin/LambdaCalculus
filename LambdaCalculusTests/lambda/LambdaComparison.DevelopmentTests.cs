@@ -10,8 +10,9 @@ public class LambdaComparisonDevelopmentTests
     [TestCase("λx.x", "λy.y", true, ExpectedResult = true)]
     [TestCase("(λx.x)", "λy.y", false, ExpectedResult = false)]
     [TestCase("(λx.x)", "λy.y", true, ExpectedResult = true)]
-    [TestCase("λg.(λx.g(x x))(λx.g(x x))", "λA.[{  λB.  A [ B   B   ] }  ]  { [λZ.   A {   Z  Z   } ] }", false, ExpectedResult = false)]
-    [TestCase("λg.(λx.g(x x))(λx.g(x x))", "λA.[{  λB.  A [ B   B   ] }  ]  { [λZ.   A {   Z  Z   } ] }", true, ExpectedResult = true)]
+    [TestCase("λx.λy.x", "λx.λy.y", false, ExpectedResult = false)]
+    [TestCase("λg.(λx.g(x x))(λx.g(x x))", "λA.([{  λB.  A [ B   B   ] }  ]  { [λZ.   A {   Z  Z   } ] })", false, ExpectedResult = false)]
+    [TestCase("λg.(λx.g(x x))(λx.g(x x))", "λA.([{  λB.  A [ B   B   ] }  ]  { [λZ.   A {   Z  Z   } ] })", true, ExpectedResult = true)]
     public bool LambdaComparison_SuccessfullyCompares_AndReturnsBoolean(string expressionStr1, string expressionStr2, bool simplify)
     {
         var expression1 = ExpressionParser.ParseExpression(expressionStr1)!;

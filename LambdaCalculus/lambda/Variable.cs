@@ -3,10 +3,12 @@ namespace LambdaCalculus.lambda;
 public class Variable : Expression
 {
     public string Name { get; }
+    public int Calls { get; internal set; }
 
-    public Variable(string name)
+    public Variable(string name, int calls)
     {
         Name = name;
+        Calls = calls;
     }
 
     public override string ToString()
@@ -18,7 +20,12 @@ public class Variable : Expression
     {
         return this;
     }
-    
+
+    internal override Expression EtaReductionRecursive()
+    {
+        return this;
+    }
+
     public override string GetHashCode()
     {
         return GetContextSize().ToString();

@@ -64,7 +64,7 @@ internal class NewVariableBuilder : AbstractExpressionBuilder
     public override Expression Build(out ParseError? error)
     {
         error = null;
-        var variable = new Variable(_text);
+        var variable = new Variable(_text, 0);
         return variable;
     }
 }
