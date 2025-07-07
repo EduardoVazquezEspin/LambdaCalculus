@@ -38,16 +38,28 @@ public class Lambda : Expression, IParenthesisHolder
         return composition.LeftExpression;
     }
 
+    private bool HasParenthesis()
+    {
+        if (Parent is not Composition composition)
+            return false;
+        if (composition.LeftExpression == this)
+            return true;
+        return composition.Parent is Composition && !composition.HasParenthesis();
+    }
+
     public override string ToString()
     {
         var body =$"λ{Variable.ToString()}.{Expression.ToString()}";
-        if (Parent is not Composition composition || composition.RightExpression == this && (composition.Parent is not Composition || composition.HasParenthesis()))
+        if (!HasParenthesis())
             return body;
         return $"{ParenthesisType.GetOpenChar()}{body}{ParenthesisType.GetClosedChar()}"; 
     }
     
     public override string GetHashCode()
     {
-        return $"(λ{Expression.GetHashCode()})";
+        var body = $"λ{Expression.GetHashCode()}";
+        if (!HasParenthesis())
+            return body;
+        return $"({body})";
     }
 }

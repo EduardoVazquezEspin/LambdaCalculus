@@ -70,30 +70,15 @@ Lambda(Paren(X)) = Lambda(X)
 
 Rule for beta reduction:
 
-Composition(Lambda, x, ...(n parameters)) = Composition(Lambda.Expression(X = x), ...)
+Composition(Lambda, x) = Lambda.Expression(X = x) // need to recalculate # calls of variables?
 
-/ = Lambda(X = x) (if n == 0)
+Need to implement copy method
 
-Simplify afterwards
-
-# ✅ Eta Reduction (Do we need to? Yes) (Can we remove do while loop?)
+# ✅ Eta Reduction (Do we need to? Yes) (Can we remove do while loop? Yes)
 
 ```λx.Y x = Y``` where Y does not depend on x
 
 Needs a calls parameter in variable
-
-Add as a simplifcation rule ??
-
-Current implementation:
-
-λ.Simplify()
-loop (until λ is repeated)
-   λ.EtaReduce()
-   λ.Simplify()
-
-This happens because λ.EtaReduce doesn't return a simplified form. Then the **hypothesis** is that after λ.Simplify anoter EtaReduction might be possible.
-
-Test this by removing the loop and the second λ.Simplify, see what fails and try to get it fixed in λ.EtaReduce. Some cases are impossible since they need to modify outside of their context (but that doesn't mean they can trigger an extra λ.EtaReduce)
 
 ## Child is Composition of 3 or more
 

@@ -50,6 +50,9 @@ public class Composition : Expression, IParenthesisHolder
     
     public override string GetHashCode()
     {
-        return $"({LeftExpression.GetHashCode()} {RightExpression.GetHashCode()})";
+        var body = $"{LeftExpression.GetHashCode()} {RightExpression.GetHashCode()}";
+        if (!HasParenthesis())
+            return body;
+        return $"({body})";
     }
 }
