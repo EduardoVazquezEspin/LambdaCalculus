@@ -70,11 +70,11 @@ Lambda(Paren(X)) = Lambda(X)
 
 Rule for beta reduction:
 
-Composition(Lambda, x, ...(n parameters)) = Composition(Lambda(X = x), ...)
+Composition(Lambda, x, ...(n parameters)) = Composition(Lambda.Expression(X = x), ...)
 
 / = Lambda(X = x) (if n == 0)
 
-Simplify afterwardszy. y z
+Simplify afterwards
 
 # ✅ Eta Reduction (Do we need to? Yes) (Can we remove do while loop?)
 
