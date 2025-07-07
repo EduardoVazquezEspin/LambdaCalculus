@@ -14,8 +14,6 @@ public class ExpressionParserDevelopmentTests
     [TestCase("λn.λm.λf.λx.n f (m f x)")]
     [TestCase("λn.λm.λf.λx.n f (m (f x))")]
     [TestCase("[λf.f f] {λx.λy.x} λx.λy.y")]
-    [TestCase("([{([{λA.A}])}])")]
-    [TestCase("λA.λB.A ([{([{B A}])}])")]
     public void ExpressionParser_ParsesSuccessfully_AndStringifiesEqualToInput(string expression)
     {
         var lambda = ExpressionParser.ParseExpression(expression, out var error);

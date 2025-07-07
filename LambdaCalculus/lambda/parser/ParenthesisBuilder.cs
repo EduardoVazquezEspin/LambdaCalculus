@@ -82,6 +82,9 @@ internal class ParenthesisBuilder : AbstractExpressionBuilder
             error = new UnfinishedExpression();
             return null;
         }
-        return new Parenthesis(_type, _expression);
+
+        if (_expression is IParenthesisHolder parenthesisHolder)
+            parenthesisHolder.ParenthesisType = _type;
+        return _expression;
     }
 }

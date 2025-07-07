@@ -22,9 +22,7 @@ public class EtaReductionDevelopmentTests
     [TestCase("λx.λy.λz.λa.λb.λc.x y z a b c", "λx.x")] // A bit of everything
     public void EtaReduction_RunsSuccessfully_AndReturnsInSimplifiedForm(string expression, string simplified)
     {
-        var lambda = ExpressionParser.ParseExpression(expression)!
-            .Simplify()
-            .EtaReduction();
+        var lambda = ExpressionParser.ParseExpression(expression)!.EtaReduction();
         Assert.That(lambda.ToString(), Is.EqualTo(simplified));
         Assert.True(lambda.IsWellFormatted());
     }

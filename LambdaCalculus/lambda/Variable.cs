@@ -16,18 +16,13 @@ public class Variable : Expression
         return Name;
     }
 
-    public override Expression Simplify()
-    {
-        return this;
-    }
-
-    internal override Expression EtaReductionRecursive()
-    {
-        return this;
-    }
-
     public override string GetHashCode()
     {
         return GetContextSize().ToString();
+    }
+
+    public override Expression EtaReduction()
+    {
+        return this;
     }
 }

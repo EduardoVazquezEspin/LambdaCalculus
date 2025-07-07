@@ -107,7 +107,7 @@ internal class LambdaBuilder : AbstractExpressionBuilder
             error = new SomethingWentWrong();
             return null;
         }
-        var lambda = new Lambda(_variable, _expression, GlobalContext);
+        var lambda = new Lambda(_variable, _expression);
         return lambda;
     }
 

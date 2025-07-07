@@ -42,7 +42,10 @@ internal class GenericExpressionBuilder : AbstractExpressionBuilder
             case 1:
                 return _expressions[0];
             default:
-                return new Composition(_expressions);
+                var expression = new Composition(_expressions[0], _expressions[1]);
+                for (int i = 2; i < _expressions.Count; i++)
+                    expression = new Composition(expression, _expressions[i]);
+                return expression;
         }
     }
 }

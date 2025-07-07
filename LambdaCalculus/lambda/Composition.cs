@@ -1,55 +1,55 @@
 namespace LambdaCalculus.lambda;
 
-public class Composition : Expression
+public class Composition : Expression, IParenthesisHolder
 {
-    internal List<Expression> Expressions { get; private set; }
+    internal Expression LeftExpression { get; private set; }
 
-    public Composition(List<Expression> expressions)
+    internal Expression RightExpression { get; private set; }
+
+    public ParenthesisType ParenthesisType { get; set; }
+
+    public Composition(Expression leftExpression, Expression rightExpression, ParenthesisType parenthesisType = ParenthesisType.Round)
     {
-        Expressions = expressions;
-        Expressions.ForEach(it => it.Parent = this);
+        LeftExpression = leftExpression;
+        RightExpression = rightExpression;
+        LeftExpression.Parent = this;
+        RightExpression.Parent = this;
+        ParenthesisType = parenthesisType;
     }
-    public override Expression Simplify()
-    {
-        Expressions = Expressions.Select(it => it.Simplify()).ToList();
-
-        // Composition is left associative
-        if (Expressions[0] is Parenthesis {Expression: Composition childComposition})
-        {
-            Expressions.RemoveAt(0);
-            var childExpressions = childComposition.Expressions;
-            childExpressions.ForEach(expression => expression.Parent = this);
-            Expressions = childExpressions.Concat(Expressions).ToList();
-        }
-        // Lambdas extend to the right
-        if (Expressions[^1] is Parenthesis {Expression: Lambda lambda})
-        {
-            Expressions.RemoveAt(Expressions.Count - 1);
-            lambda.Parent = this;
-            Expressions.Add(lambda);
-        }
-
-        return this;
-    }
-
-    internal override Expression EtaReductionRecursive()
-    {
-        Expressions = Expressions.Select(expression => expression.EtaReductionRecursive()).ToList();
-        return this;
-    }
-
+    
     public override bool IsWellFormatted()
     {
-        return Expressions.TrueForAll(expression => expression is Variable || expression.Parent == this && expression.IsWellFormatted());
+        if (LeftExpression is not Variable && (LeftExpression.Parent != this || !LeftExpression.IsWellFormatted()))
+            return false;
+        if (RightExpression is not Variable && (RightExpression.Parent != this || !RightExpression.IsWellFormatted()))
+            return false;
+        return true;
+    }
+
+    public override Expression EtaReduction()
+    {
+        LeftExpression = LeftExpression.EtaReduction();
+        RightExpression = RightExpression.EtaReduction();
+        return this;
+    }
+
+    public bool HasParenthesis()
+    {
+        if (Parent is not Composition composition)
+            return false;
+        return composition.RightExpression == this;
     }
 
     public override string ToString()
     {
-        return string.Join(' ', Expressions.Select(it => it.ToString()));
+        var body = $"{LeftExpression.ToString()} {RightExpression.ToString()}";
+        if (!HasParenthesis())
+            return body;
+        return $"{ParenthesisType.GetOpenChar()}{body}{ParenthesisType.GetClosedChar()}";
     }
     
     public override string GetHashCode()
     {
-        return string.Join(' ', Expressions.Select(it => it.GetHashCode()));
+        return $"({LeftExpression.GetHashCode()} {RightExpression.GetHashCode()})";
     }
 }
