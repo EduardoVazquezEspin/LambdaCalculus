@@ -33,6 +33,15 @@ public class Composition : Expression, IParenthesisHolder
         return this;
     }
 
+    internal override void GetAllBetaReductionOptionsRecursive(List<BetaReductionOption> list, int height, int right)
+    {
+        if(LeftExpression is Lambda)
+            list.Add(new BetaReductionOption(this, height, right));
+        
+        LeftExpression.GetAllBetaReductionOptionsRecursive(list, height + 1, right);
+        RightExpression.GetAllBetaReductionOptionsRecursive(list, height, right + 1);
+    }
+
     public bool HasParenthesis()
     {
         if (Parent is not Composition composition)

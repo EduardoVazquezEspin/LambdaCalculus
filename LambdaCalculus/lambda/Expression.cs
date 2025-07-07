@@ -22,4 +22,13 @@ public abstract class Expression
     }
 
     public abstract Expression EtaReduction();
+
+    public List<BetaReductionOption> GetAllBetaReductionOptions()
+    {
+        var list = new List<BetaReductionOption>();
+        GetAllBetaReductionOptionsRecursive(list, 0, 0);
+        return list;
+    }
+
+    internal abstract void GetAllBetaReductionOptionsRecursive(List<BetaReductionOption> list, int height, int right);
 }

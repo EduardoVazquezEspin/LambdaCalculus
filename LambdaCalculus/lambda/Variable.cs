@@ -25,4 +25,6 @@ public class Variable : Expression
     {
         return this;
     }
+
+    internal override void GetAllBetaReductionOptionsRecursive(List<BetaReductionOption> list, int height, int right) { }
 }
