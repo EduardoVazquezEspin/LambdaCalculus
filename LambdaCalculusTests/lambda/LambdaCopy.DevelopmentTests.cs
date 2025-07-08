@@ -33,9 +33,21 @@ public class LambdaCopyDevelopmentTests
         Assert.True(copy.IsWellFormatted());
         Assert.That(copy.ToString(), Is.EqualTo(expression.ToString()));
     }
+
+    [TestCase("λx.x", 1)]
+    [TestCase("λx.x x", 2)]
+    [TestCase("λx.λy.x λx.x", 1)]
+    [TestCase("λx.λy.x (λx.x) x", 2)]
+    public void LambdaCopy_RunsSuccessfully_KeepsCountOfVariableCalls(string expressionStr, int expectedCalls)
+    {
+        var expression = ExpressionParser.ParseLambda(expressionStr)!;
+        var copy = expression.Copy();
+        Assert.That(expression.Variable.Calls, Is.EqualTo(expectedCalls));
+        Assert.That(copy.Variable.Calls, Is.EqualTo(expectedCalls));
+    }
     
     [Test]
-    public void LambdaSimplify_RunsSuccessfully_MaintainsVariableReference1()
+    public void LambdaCopy_RunsSuccessfully_MaintainsVariableReference1()
     {
         var expressionStr = "λx.x";
         var expression = ExpressionParser.ParseLambda(expressionStr, out var error)!;
@@ -50,7 +62,7 @@ public class LambdaCopyDevelopmentTests
     }
     
     [Test]
-    public void LambdaSimplify_RunsSuccessfully_MaintainsVariableReference2()
+    public void LambdaCopy_RunsSuccessfully_MaintainsVariableReference2()
     {
         var expressionStr = "λx.λy.x";
         var expression = ExpressionParser.ParseLambda(expressionStr, out var error)!;
@@ -65,7 +77,7 @@ public class LambdaCopyDevelopmentTests
     }
     
     [Test]
-    public void LambdaSimplify_RunsSuccessfully_MaintainsVariableReference3()
+    public void LambdaCopy_RunsSuccessfully_MaintainsVariableReference3()
     {
         var expressionStr = "λx.λy.y";
         var expression = ExpressionParser.ParseLambda(expressionStr, out var error)!;
