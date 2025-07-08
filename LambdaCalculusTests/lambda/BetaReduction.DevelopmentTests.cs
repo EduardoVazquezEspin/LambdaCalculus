@@ -26,4 +26,19 @@ public class BetaReductionDevelopmentTests
         expression.IsWellFormatted();
         return expression.GetAllBetaReductionOptions().Count;
     }
+    
+    [TestCase("[λf.f f] λx.x", "(λx.x) λx.x")]
+    [TestCase("λx.{λf.f f} λy.y x", "λx.(λy.y x) λy.y x")]
+    [TestCase("(λf.f f) λf.f f", "(λf.f f) λf.f f")]
+    [TestCase("λz.λw.(λx.λy.y)w z", "λz.λw.(λy.y) z")]
+    [TestCase("λz.λw.(λy.y) z", "λz.λw.z")]
+    public void BetaReduction_IsSuccessful_AndReturnsAnIntegerValue(string expressionStr, string expectedResult)
+    {
+        var expression = ExpressionParser.ParseExpression(expressionStr)!;
+        expression.IsWellFormatted();
+        var options = expression.GetAllBetaReductionOptions();
+        var result = expression.BetaReduction(options[0]);
+        Assert.True(result.IsWellFormatted());
+        Assert.That(result.ToString(), Is.EqualTo(expectedResult));
+    }
 }

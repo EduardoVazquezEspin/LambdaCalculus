@@ -32,4 +32,18 @@ public class Variable : Expression
     }
 
     internal override void GetAllBetaReductionOptionsRecursive(List<BetaReductionOption> list, int height, int right) { }
+    public override Expression BetaReduction(BetaReductionOption option)
+    {
+        return this;
+    }
+
+    internal override void RemoveVariableCalls()
+    {
+        Calls--;
+    }
+
+    protected override Expression Substitute(Variable variable, Expression expression)
+    {
+        return this;
+    }
 }

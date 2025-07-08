@@ -49,6 +49,36 @@ public class Composition : Expression, IParenthesisHolder
         RightExpression.GetAllBetaReductionOptionsRecursive(list, height, right + 1);
     }
 
+    public override Expression BetaReduction(BetaReductionOption option)
+    {
+        LeftExpression = LeftExpression.BetaReduction(option);
+        RightExpression = RightExpression.BetaReduction(option);
+        if (option.Composition != this)
+            return this;
+
+        RightExpression.RemoveVariableCalls();
+        if (LeftExpression is not Lambda lambda)
+            throw new Exception("Something went wrong");
+        var substitution = SubstituteChild(lambda.Expression, lambda.Variable, RightExpression);
+        substitution.Parent = Parent;
+        return substitution;
+    }
+
+    internal override void RemoveVariableCalls()
+    {
+        LeftExpression.RemoveVariableCalls();
+        RightExpression.RemoveVariableCalls();
+    }
+
+    protected override Expression Substitute(Variable variable, Expression expression)
+    {
+        LeftExpression = SubstituteChild(LeftExpression, variable, expression);
+        LeftExpression.Parent = this;
+        RightExpression = SubstituteChild(RightExpression, variable, expression);
+        RightExpression.Parent = this;
+        return this;
+    }
+
     public bool HasParenthesis()
     {
         if (Parent is not Composition composition)

@@ -60,6 +60,24 @@ public class Lambda : Expression, IParenthesisHolder
         Expression.GetAllBetaReductionOptionsRecursive(list, height + 1, right);
     }
 
+    public override Expression BetaReduction(BetaReductionOption option)
+    {
+        Expression = Expression.BetaReduction(option);
+        return this;
+    }
+
+    internal override void RemoveVariableCalls()
+    {
+        Expression.RemoveVariableCalls();
+    }
+
+    protected override Expression Substitute(Variable variable, Expression expression)
+    {
+        Expression = SubstituteChild(Expression, variable, expression);
+        Expression.Parent = this;
+        return this;
+    }
+
     private bool HasParenthesis()
     {
         if (Parent is not Composition composition)
