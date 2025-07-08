@@ -6,7 +6,7 @@ public class BetaReductionOption
     public int Right { get; }
     public Composition Composition { get; }
 
-    public BetaReductionOption(Composition composition, int height, int right)
+    internal BetaReductionOption(Composition composition, int height, int right)
     {
         Composition = composition;
         Height = height;

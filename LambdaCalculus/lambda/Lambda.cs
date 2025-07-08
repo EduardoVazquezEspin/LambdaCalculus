@@ -2,7 +2,7 @@ namespace LambdaCalculus.lambda;
 
 public class Lambda : Expression, IParenthesisHolder
 {
-    public Variable Variable { get; }
+    public Variable Variable { get; private set; }
     public Expression Expression { get; private set; }
     public ParenthesisType ParenthesisType { get; set; }
 
@@ -27,6 +27,23 @@ public class Lambda : Expression, IParenthesisHolder
     protected override int GetContextSize()
     {
         return base.GetContextSize() + 1;
+    }
+
+    protected override Variable? GetLocalVariable(string name)
+    {
+        if (Variable.Name == name)
+            return Variable;
+        return base.GetLocalVariable(name);
+    }
+
+    public override Lambda Copy()
+    {
+        var originalVariable = Variable;
+        Variable = new Variable(Variable.Name, 0);
+        var expression = CopyChild(Expression);
+        var lambda = new Lambda(Variable, expression, ParenthesisType);
+        Variable = originalVariable;
+        return lambda;
     }
 
     public override Expression EtaReduction()

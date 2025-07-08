@@ -21,6 +21,11 @@ public class Variable : Expression
         return GetContextSize().ToString();
     }
 
+    public override Variable Copy()
+    {
+        return this;
+    }
+
     public override Expression EtaReduction()
     {
         return this;

@@ -21,6 +21,29 @@ public abstract class Expression
         return Parent?.GetContextSize() ?? 0;
     }
 
+    protected virtual Variable? GetLocalVariable(string name)
+    {
+        return Parent?.GetLocalVariable(name);
+    }
+
+    public abstract Expression Copy();
+
+    protected Expression CopyChild(Expression expression)
+    {
+        Expression? result;
+        if (expression is Variable variable)
+        {
+            result = GetLocalVariable(variable.Name);
+            if (result is not Variable resultVar)
+                throw new Exception("Something went wrong");
+            resultVar.Calls++;
+        }
+        else 
+            result = expression.Copy();
+        
+        return result;
+    }
+
     public abstract Expression EtaReduction();
 
     public List<BetaReductionOption> GetAllBetaReductionOptions()

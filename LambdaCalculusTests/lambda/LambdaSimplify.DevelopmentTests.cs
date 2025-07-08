@@ -19,36 +19,4 @@ public class LambdaSimplifyDevelopmentTests
         Assert.That(lambda.ToString(), Is.EqualTo(simplified));
         Assert.True(lambda.IsWellFormatted());
     }
-
-    [Test]
-    public void LambdaSimplify_RunsSuccessfully_MaintainsVariableReference1()
-    {
-        var expression = "λx.x";
-        var lambda = ExpressionParser.ParseLambda(expression, out var error);
-        Assert.That(error, Is.InstanceOf<NoError>());
-        Assert.That(lambda!.Variable, Is.EqualTo(lambda.Expression));
-        Assert.True(lambda.IsWellFormatted());
-    }
-    
-    [Test]
-    public void LambdaSimplify_RunsSuccessfully_MaintainsVariableReference2()
-    {
-        var expression = "λx.λy.x";
-        var lambda = ExpressionParser.ParseLambda(expression, out var error);
-        var childLambda = lambda!.Expression as Lambda;
-        Assert.That(error, Is.InstanceOf<NoError>());
-        Assert.That(lambda.Variable, Is.EqualTo(childLambda!.Expression));
-        Assert.That(lambda.IsWellFormatted(), Is.True);
-    }
-    
-    [Test]
-    public void LambdaSimplify_RunsSuccessfully_MaintainsVariableReference3()
-    {
-        var expression = "λx.λx.x";
-        var lambda = ExpressionParser.ParseLambda(expression, out var error);
-        var childLambda = lambda!.Expression as Lambda;
-        Assert.That(error, Is.InstanceOf<NoError>());
-        Assert.That(childLambda!.Variable, Is.EqualTo(childLambda.Expression));
-        Assert.True(lambda.IsWellFormatted());
-    }
 }

@@ -26,6 +26,13 @@ public class Composition : Expression, IParenthesisHolder
         return true;
     }
 
+    public override Composition Copy()
+    {
+        var leftExpression = CopyChild(LeftExpression);
+        var rightExpression = CopyChild(RightExpression);
+        return new Composition(leftExpression, rightExpression, ParenthesisType);
+    }
+
     public override Expression EtaReduction()
     {
         LeftExpression = LeftExpression.EtaReduction();
