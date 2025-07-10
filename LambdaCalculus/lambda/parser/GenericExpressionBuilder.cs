@@ -3,10 +3,7 @@ namespace LambdaCalculus.lambda;
 internal class GenericExpressionBuilder : AbstractExpressionBuilder
 {
     private readonly List<Expression> _expressions;
-    public GenericExpressionBuilder(
-        Dictionary<string, Variable> globalContext,
-        AbstractExpressionBuilder? parent = null
-        ) : base(globalContext, parent)
+    public GenericExpressionBuilder(AbstractExpressionBuilder? parent = null) : base(parent)
     {
         _expressions = new List<Expression>();
     }

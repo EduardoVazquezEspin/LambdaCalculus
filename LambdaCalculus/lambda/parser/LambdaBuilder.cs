@@ -13,13 +13,12 @@ internal class LambdaBuilder : AbstractExpressionBuilder
 
     private LambdaBuilderState _state;
     private bool _hasError;
-    private Variable? _variable;
+    private Definition? _definition;
     private Expression? _expression;
 
     public LambdaBuilder(
-        Dictionary<string, Variable> globalContext,
         AbstractExpressionBuilder? parent = null
-    ) : base(globalContext, parent)
+    ) : base(parent)
     {
         _state = LambdaBuilderState.Lambda;
         _hasError = false;
@@ -85,12 +84,12 @@ internal class LambdaBuilder : AbstractExpressionBuilder
         {
             case LambdaBuilderState.Variable:
                 _state = LambdaBuilderState.Point;
-                if (!(lastParsedExpression is Variable variable))
+                if (!(lastParsedExpression is Definition definition))
                 {
                     _hasError = true;
                     return;
                 }
-                _variable = variable;
+                _definition = definition;
                 return;
             case LambdaBuilderState.Expression:
                 _state = LambdaBuilderState.Finished;
@@ -102,19 +101,19 @@ internal class LambdaBuilder : AbstractExpressionBuilder
     public override Expression? Build(out ParseError? error)
     {
         error = null;
-        if (_variable == null || _expression == null)
+        if (_definition == null || _expression == null)
         {
             error = new SomethingWentWrong();
             return null;
         }
-        var lambda = new Lambda(_variable, _expression);
+        var lambda = new Lambda(_definition, _expression);
         return lambda;
     }
 
-    protected override Variable? GetLocalVariable(string name)
+    protected override Definition? GetLocalVariable(string name)
     {
-        if (_variable?.Name == name)
-            return _variable;
+        if (_definition?.Name == name)
+            return _definition;
         
         return base.GetLocalVariable(name);
     }

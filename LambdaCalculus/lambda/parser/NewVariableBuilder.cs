@@ -10,10 +10,7 @@ internal class NewVariableBuilder : AbstractExpressionBuilder
     private NewVariableBuilderState _state;
     private string _text;
 
-    public NewVariableBuilder(
-        Dictionary<string, Variable> globalContext,
-        AbstractExpressionBuilder? parent = null
-        ) : base(globalContext, parent)
+    public NewVariableBuilder(AbstractExpressionBuilder? parent = null) : base(parent)
     {
         _state = NewVariableBuilderState.ReadingWhitespace;
         _text = "";
@@ -63,7 +60,7 @@ internal class NewVariableBuilder : AbstractExpressionBuilder
     public override Expression Build(out ParseError? error)
     {
         error = null;
-        var variable = new Variable(_text, 0);
+        var variable = new Definition(_text, 0);
         return variable;
     }
 }

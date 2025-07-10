@@ -15,10 +15,7 @@ internal class ParenthesisBuilder : AbstractExpressionBuilder
     private Expression? _expression;
     
     
-    public ParenthesisBuilder(
-        Dictionary<string, Variable> globalContext,
-        AbstractExpressionBuilder? parent = null
-        ) : base(globalContext, parent)
+    public ParenthesisBuilder(AbstractExpressionBuilder? parent = null) : base(parent)
     {
         _state = ParenthesisBuilderState.ReadingOpen;
     }

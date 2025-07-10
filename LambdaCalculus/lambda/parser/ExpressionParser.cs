@@ -16,8 +16,6 @@ public sealed class ExpressionParser
     private AbstractExpressionBuilder? _builder;
     private List<AbstractExpressionBuilder> _queue = null!;
     
-    private Dictionary<string, Variable> _globalContext = null!;
-    
     private ExpressionParser() { }
     
     private Expression? Parse(string expressionStr, out ParseError error, ParseOptions options)
@@ -27,12 +25,11 @@ public sealed class ExpressionParser
         _hasError = false;
         _error = null;
         _lastExpression = null;
-        _globalContext = new Dictionary<string, Variable>();
 
         _queue = new List<AbstractExpressionBuilder>();
         _builder = options == ParseOptions.ParseExpression
-            ? new GenericExpressionBuilder(_globalContext)
-            : new LambdaBuilder(_globalContext);
+            ? new GenericExpressionBuilder()
+            : new LambdaBuilder();
         _queue.Add(_builder);
 
         while (!_hasError && _builder != null && _index < _expressionStr.Length)
@@ -99,23 +96,23 @@ public sealed class ExpressionParser
                 _builder?.BackToYou(expression);
                 return;
             case Flow.ParseExpression:
-                _builder = new GenericExpressionBuilder(_globalContext, _builder);
+                _builder = new GenericExpressionBuilder(_builder);
                 _queue.Add(_builder);
                 break;
             case Flow.ParseLambda:
-                _builder = new LambdaBuilder(_globalContext, _builder);
+                _builder = new LambdaBuilder(_builder);
                 _queue.Add(_builder);
                 return;
             case Flow.ParseParenthesis:
-                _builder = new ParenthesisBuilder(_globalContext, _builder);
+                _builder = new ParenthesisBuilder(_builder);
                 _queue.Add(_builder);
                 return;
             case Flow.ParseVariable:
-                _builder = new OldVariableBuilder(_globalContext, _builder);
+                _builder = new OldVariableBuilder(_builder);
                 _queue.Add(_builder);
                 return;
             case Flow.ParseNewVariable:
-                _builder = new NewVariableBuilder(_globalContext, _builder);
+                _builder = new NewVariableBuilder(_builder);
                 _queue.Add(_builder);
                 return;
             case Flow.Error:
