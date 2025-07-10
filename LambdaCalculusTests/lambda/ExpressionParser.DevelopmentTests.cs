@@ -9,8 +9,8 @@ public class ExpressionParserDevelopmentTests
     
     [TestCase("λx.x")]
     [TestCase("λx.λy.x")]
-    [TestCase("λx.λx.x")]
-    [TestCase("λx.(λx.x) x")] // η reduction
+    [TestCase("λx.λy.y")]
+    [TestCase("λx.(λy.y) x")] // η reduction
     [TestCase("λn.λm.λf.λx.n f (m f x)")]
     [TestCase("λn.λm.λf.λx.n f (m (f x))")]
     [TestCase("[λf.f f] {λx.λy.x} λx.λy.y")]
@@ -46,7 +46,8 @@ public class ExpressionParserDevelopmentTests
     [TestCase("λx..x]", typeof(InvalidCharacter))]
     [TestCase("λx.λy.(x]", typeof(InvalidCharacter))]
     [TestCase("([λx.x)]", typeof(InvalidCharacter))]
-    [TestCase("1", typeof(InvalidCharacter))] 
+    [TestCase("à", typeof(InvalidCharacter))] 
+    [TestCase("λx.(x",typeof(SomethingWentWrong))]
     [TestCase("λx.x myvariable myothervariable", typeof(FreeVariable))]
     public void ExpressionParser_ParsesUnsuccessfully_ReturnsNullAndError(string expression, Type type)
     {

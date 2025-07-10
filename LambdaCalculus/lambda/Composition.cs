@@ -20,17 +20,24 @@ public class Composition : Expression, IParenthesisHolder
     public override bool IsWellFormatted()
     {
         if (LeftExpression is not Variable && (LeftExpression.Parent != this || !LeftExpression.IsWellFormatted()))
-            return false;
+            throw new Exception("Not well formatted");
         if (RightExpression is not Variable && (RightExpression.Parent != this || !RightExpression.IsWellFormatted()))
-            return false;
+            throw new Exception("Not well formatted");
         return true;
     }
 
     public override Composition Copy()
     {
+        var originalLeftExpressionParent = LeftExpression.Parent;
         var leftExpression = CopyChild(LeftExpression);
+        var originalRightExpressionParent = RightExpression.Parent;
         var rightExpression = CopyChild(RightExpression);
-        return new Composition(leftExpression, rightExpression, ParenthesisType);
+        var newComposition = new Composition(leftExpression, rightExpression, ParenthesisType);
+        if (LeftExpression is Variable)
+            LeftExpression.Parent = originalLeftExpressionParent;
+        if (RightExpression is Variable)
+            RightExpression.Parent = originalRightExpressionParent;
+        return newComposition;
     }
 
     public override Expression EtaReduction()
@@ -40,28 +47,44 @@ public class Composition : Expression, IParenthesisHolder
         return this;
     }
 
-    internal override void GetAllBetaReductionOptionsRecursive(List<BetaReductionOption> list, int height, int right)
+    internal override void GetAllBetaReductionOptionsRecursive(List<BetaReductionOption> list, int height, int right, List<CompositionPath> currentPath)
     {
-        if(LeftExpression is Lambda)
-            list.Add(new BetaReductionOption(this, height, right));
-        
-        LeftExpression.GetAllBetaReductionOptionsRecursive(list, height + 1, right);
-        RightExpression.GetAllBetaReductionOptionsRecursive(list, height, right + 1);
+        if (LeftExpression is Lambda)
+        {
+            var copy = new List<CompositionPath>(currentPath) {CompositionPath.This};
+            list.Add(new BetaReductionOption(copy, height, right));
+        }
+            
+        currentPath.Add(CompositionPath.Left);
+        LeftExpression.GetAllBetaReductionOptionsRecursive(list, height + 1, right, currentPath);
+        currentPath.RemoveAt(currentPath.Count - 1);
+        currentPath.Add(CompositionPath.Right);
+        RightExpression.GetAllBetaReductionOptionsRecursive(list, height, right + 1, currentPath);
+        currentPath.RemoveAt(currentPath.Count - 1);
     }
 
     public override Expression BetaReduction(BetaReductionOption option)
     {
-        LeftExpression = LeftExpression.BetaReduction(option);
-        RightExpression = RightExpression.BetaReduction(option);
-        if (option.Composition != this)
-            return this;
-
-        RightExpression.RemoveVariableCalls();
-        if (LeftExpression is not Lambda lambda)
-            throw new Exception("Something went wrong");
-        var substitution = SubstituteChild(lambda.Expression, lambda.Variable, RightExpression);
-        substitution.Parent = Parent;
-        return substitution;
+        var direction = option.Path[0];
+        option.Path.RemoveAt(0);
+        switch (direction)
+        {
+            case CompositionPath.Left:
+                LeftExpression = LeftExpression.BetaReduction(option);
+                return this;
+            case CompositionPath.Right:
+                RightExpression = RightExpression.BetaReduction(option);
+                return this;
+            case CompositionPath.This:
+            default:
+                RightExpression.RemoveVariableCalls();
+                if (LeftExpression is not Lambda lambda)
+                    throw new Exception("Something went wrong");
+                var substitution = SubstituteChild(lambda.Expression, lambda.Variable, RightExpression);
+                if(substitution is not Variable)
+                    substitution.Parent = Parent;
+                return substitution;
+        }
     }
 
     internal override void RemoveVariableCalls()
@@ -73,9 +96,11 @@ public class Composition : Expression, IParenthesisHolder
     protected override Expression Substitute(Variable variable, Expression expression)
     {
         LeftExpression = SubstituteChild(LeftExpression, variable, expression);
-        LeftExpression.Parent = this;
+        if(LeftExpression is not Variable)
+            LeftExpression.Parent = this;
         RightExpression = SubstituteChild(RightExpression, variable, expression);
-        RightExpression.Parent = this;
+        if(RightExpression is not Variable)
+            RightExpression.Parent = this;
         return this;
     }
 
@@ -86,9 +111,9 @@ public class Composition : Expression, IParenthesisHolder
         return composition.RightExpression == this;
     }
 
-    public override string ToString()
+    internal override string ToString(Dictionary<uint, string> cache, HashSet<string> taken)
     {
-        var body = $"{LeftExpression.ToString()} {RightExpression.ToString()}";
+        var body = $"{LeftExpression.ToString(cache, taken)} {RightExpression.ToString(cache, taken)}";
         if (!HasParenthesis())
             return body;
         return $"{ParenthesisType.GetOpenChar()}{body}{ParenthesisType.GetClosedChar()}";

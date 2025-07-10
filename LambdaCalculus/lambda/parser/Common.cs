@@ -36,6 +36,8 @@ internal static class Helpers
             return true;
         if (c is >= 'A' and <= 'Z')
             return true;
+        if (c is >= '0' and <= '9')
+            return true;
         return false;
     }
 }

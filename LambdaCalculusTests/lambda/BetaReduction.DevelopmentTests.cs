@@ -32,7 +32,8 @@ public class BetaReductionDevelopmentTests
     [TestCase("(λf.f f) λf.f f", "(λf.f f) λf.f f")]
     [TestCase("λz.λw.(λx.λy.y)w z", "λz.λw.(λy.y) z")]
     [TestCase("λz.λw.(λy.y) z", "λz.λw.z")]
-    public void BetaReduction_IsSuccessful_AndReturnsAnIntegerValue(string expressionStr, string expectedResult)
+    [TestCase("(λf.λy.f (f (f y))) (λn.λf.λx.f (n f x))", "λy.(λn.λf.λx.f (n f x)) ((λn.λf.λx.f (n f x)) ((λn.λf.λx.f (n f x)) y))")] // 3 ++
+    public void BetaReduction_IsSuccessful_AndReturnsAValidExpression(string expressionStr, string expectedResult)
     {
         var expression = ExpressionParser.ParseExpression(expressionStr)!;
         expression.IsWellFormatted();

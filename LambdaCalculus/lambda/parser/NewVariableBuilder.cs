@@ -51,10 +51,9 @@ internal class NewVariableBuilder : AbstractExpressionBuilder
             return Flow.Build;
         if (Helpers.IsValidVariableChar(c))
         {
-            _state += c;
+            _text += c;
             return Flow.Continue;
         }
-
         return Flow.Error;
     }
     

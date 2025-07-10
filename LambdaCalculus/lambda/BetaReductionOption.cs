@@ -1,14 +1,21 @@
 namespace LambdaCalculus.lambda;
 
+public enum CompositionPath
+{
+    Left,
+    Right,
+    This
+}
+
 public class BetaReductionOption
 {
     public int Height { get; }
     public int Right { get; }
-    public Composition Composition { get; }
+    public List<CompositionPath> Path { get; }
 
-    internal BetaReductionOption(Composition composition, int height, int right)
+    internal BetaReductionOption(List<CompositionPath> path, int height, int right)
     {
-        Composition = composition;
+        Path = path;
         Height = height;
         Right = right;
     }

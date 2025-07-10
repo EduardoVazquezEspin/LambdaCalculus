@@ -66,7 +66,7 @@ Lambda(Paren(X)) = Lambda(X)
 4) Add Parent injection to builder
 
 # ✅ Lambda equivalence
-# Beta Reduction
+# ✅ Beta Reduction
 
 Rule for beta reduction:
 
@@ -137,5 +137,60 @@ Note: we need to check if last element is lambda'
 ```λx.x λy.(λx.x x) y = λx.x λx.x x```
 
 ```λx.x (λy.(λx.x x) y) x = λx.x (λx.x x) x```
+
+# Global Dictionary
+
+```TRUE → λx.λy.x```
+
+```FALSE → λx.λy.y```
+
+```IF → λb.λx.λy.b x y```
+
+```0 → λf.λx.x```
+
+```1 → λf.λx.f x```
+
+```2 → λf.λx.f (f x)```
+
+```3 → λf.λx.f (f (f x))```
+
+```4 → λf.λx.f (f (f (f x)))```
+
+```5 → λf.λx.f (f (f (f (f x))))```
+
+SUCC:
+```++ → λn.λf.λx.f (n f x)```
+
+PRED:
+```-- → λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)```
+
+```+ → λn.λm.λf.λx.n f (m f x)```
+
+```- → λm.λn.n -- m → λm.λn.n (λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m```
+
+```* → λm.λn.λf.m (n f)```
+
+```==0 → λn.n (λx.FALSE) TRUE → λn.n (λx.λx.λy.y) λx.λy.x```
+
+```≤ → λm.λn.==0 (- m n) → λm.λn.(λn.n (λx.λx.λy.y) λx.λy.x) ((λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m n)```
+
+```Y → λg.(λx.g (x x)) (λx.g (x x))```
+
+```G → λr.λn.IF (==0 n) 1 (* n (r (-- n)))```
+
+```G → λr.λn.(λb.λx.λy.b x y) ((λn.n (λx.λx.λy.y) λx.λy.x) n) (λf.λx.f x) ((λm.λn.λf.m (n f)) n (r ((λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) n)))```
+
+```! → Y G```
+
+```! 4 → (λr.λn.(λb.λx.λy.b x y) ((λn.n (λx.λx.λy.y) λx.λy.x) n) (λf.λx.f x) ((λm.λn.λf.m (n f)) n (r ((λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) n)))) (λf.λx.f (f (f (f x))))```
+
+```24 → λf.λx.f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f x)))))))))))))))))))))))```
+
+```! 3 → (λr.λn.(λb.λx.λy.b x y) ((λn.n (λx.λx.λy.y) λx.λy.x) n) (λf.λx.f x) ((λm.λn.λf.m (n f)) n (r ((λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) n)))) (λf.λx.f (f (f x)))```
+
+```6 → λf.λx.f (f (f (f (f (f x)))))```
+
+
+
 
 # Console Cryptic Commands implementation
