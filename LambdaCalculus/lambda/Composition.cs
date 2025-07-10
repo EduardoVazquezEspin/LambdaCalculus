@@ -55,4 +55,11 @@ public class Composition : Expression, IParenthesisHolder
         RightExpression = RightExpression.EtaReduction();
         return this;
     }
+
+    public override Composition Copy()
+    {
+        var leftExpression = LeftExpression.Copy();
+        var rightExpression = RightExpression.Copy();
+        return new Composition(leftExpression, rightExpression, ParenthesisType);
+    }
 }

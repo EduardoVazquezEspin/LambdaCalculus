@@ -23,7 +23,7 @@ public class Lambda : Expression, IParenthesisHolder
     {
         if (Definition.Parent != this || !Definition.IsWellFormatted())
             throw new Exception("Not well formatted");
-        var result = Expression is Variable || Expression.Parent == this && Expression.IsWellFormatted();
+        var result = Expression.Parent == this && Expression.IsWellFormatted();
         if (!result)
             throw new Exception("Not well formatted");
         return result;
@@ -32,6 +32,13 @@ public class Lambda : Expression, IParenthesisHolder
     internal override int GetContextSize()
     {
         return base.GetContextSize() + 1;
+    }   
+    
+    protected override Definition? GetLocalVariable(uint id)
+    {
+        if (Definition.PreId == id || Definition.Id == id)
+            return Definition;
+        return base.GetLocalVariable(id);
     }
 
     internal override Definition? GetLocalVariableByName(string name)
@@ -77,5 +84,16 @@ public class Lambda : Expression, IParenthesisHolder
             return this;
         composition.LeftExpression.Parent = Parent;
         return composition.LeftExpression;
+    }
+
+    public override Lambda Copy()
+    {
+        var definition = Definition.Copy();
+        var newLambda = new Lambda(definition, Expression, ParenthesisType) {Parent = Parent};
+        var expression = Expression.Copy();
+        Expression.Parent = this;
+        expression.Parent = newLambda;
+        newLambda.Expression = expression;
+        return newLambda;
     }
 }

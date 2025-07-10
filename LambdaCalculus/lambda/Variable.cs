@@ -2,7 +2,7 @@ namespace LambdaCalculus.lambda;
 
 public class Variable : Expression
 {
-    internal Definition Definition { get; }
+    public Definition Definition { get; }
 
     public Variable(Definition definition)
     {
@@ -21,11 +21,20 @@ public class Variable : Expression
 
     public override bool IsWellFormatted()
     {
-        return true;
+        return GetLocalVariable(Definition.Id) == Definition;
     }
     
     public override Expression EtaReduction()
     {
         return this;
+    }
+
+    public override Variable Copy()
+    {
+        var definition = GetLocalVariable(Definition.Id);
+        if (definition is null)
+            throw new Exception("Something went wrong");
+        definition.Calls++;
+        return new Variable(definition);
     }
 }

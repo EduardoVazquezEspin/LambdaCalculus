@@ -27,6 +27,11 @@ public abstract class Expression
     {
         return Parent?.GetContextSize() ?? 0;
     }
+
+    protected virtual Definition? GetLocalVariable(uint id)
+    {
+        return Parent?.GetLocalVariable(id);
+    }
     
     internal virtual Definition? GetLocalVariableByName(string name)
     {
@@ -34,4 +39,6 @@ public abstract class Expression
     }
 
     public abstract Expression EtaReduction();
+    
+    public abstract Expression Copy();
 }

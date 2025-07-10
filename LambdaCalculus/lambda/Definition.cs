@@ -79,4 +79,9 @@ public class Definition : Expression
     {
         return this;
     }
+
+    public override Definition Copy()
+    {
+        return new Definition(Name, 0, Id);
+    }
 }
