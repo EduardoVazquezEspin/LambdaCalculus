@@ -96,4 +96,26 @@ public class Lambda : Expression, IParenthesisHolder
         newLambda.Expression = expression;
         return newLambda;
     }
+
+    internal override void GetAllBetaReductionOptionsRecursive(List<BetaReductionOption> list, int height, int right, List<CompositionPath> currentPath)
+    {
+        Expression.GetAllBetaReductionOptionsRecursive(list, height +1, right, currentPath);
+    }
+
+    public override Expression BetaReduction(BetaReductionOption option)
+    {
+        Expression = Expression.BetaReduction(option);
+        return this;
+    }
+
+    internal override Expression Substitute(Definition definition, Expression expression)
+    {
+        Expression = Expression.Substitute(definition, expression);
+        return this;
+    }
+
+    internal override void RemoveVariableCalls()
+    {
+        Expression.RemoveVariableCalls();        
+    }
 }

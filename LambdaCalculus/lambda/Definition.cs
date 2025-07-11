@@ -84,4 +84,18 @@ public class Definition : Expression
     {
         return new Definition(Name, 0, Id);
     }
+
+    internal override void GetAllBetaReductionOptionsRecursive(List<BetaReductionOption> list, int height, int right, List<CompositionPath> currentPath) { }
+
+    public override Expression BetaReduction(BetaReductionOption option)
+    {
+        return this;
+    }
+
+    internal override Expression Substitute(Definition definition, Expression expression)
+    {
+        return this;
+    }
+
+    internal override void RemoveVariableCalls() { }
 }

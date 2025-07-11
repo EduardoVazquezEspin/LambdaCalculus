@@ -37,4 +37,26 @@ public class Variable : Expression
         definition.Calls++;
         return new Variable(definition);
     }
+
+    internal override void GetAllBetaReductionOptionsRecursive(List<BetaReductionOption> list, int height, int right, List<CompositionPath> currentPath) { }
+
+    public override Expression BetaReduction(BetaReductionOption option)
+    {
+        return this;
+    }
+
+    internal override Expression Substitute(Definition definition, Expression expression)
+    {
+        if (definition != Definition)
+            return this;
+
+        var copy = expression.Copy();
+        copy.Parent = Parent;
+        return copy;
+    }
+
+    internal override void RemoveVariableCalls()
+    {
+        Definition.Calls--;
+    }
 }
