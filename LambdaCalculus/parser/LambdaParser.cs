@@ -1,6 +1,6 @@
 namespace LambdaCalculus;
 
-public sealed class ExpressionParser
+public sealed class LambdaParser
 {
     private enum ParseOptions{
         ParseExpression,
@@ -15,8 +15,12 @@ public sealed class ExpressionParser
     private Expression? _lastExpression;
     private AbstractExpressionBuilder? _builder;
     private List<AbstractExpressionBuilder> _queue = null!;
-    
-    private ExpressionParser() { }
+    private readonly Dictionary<string, Expression> _globalContext;
+
+    public LambdaParser(Dictionary<string, Expression>? globalContext = null)
+    {
+        _globalContext = globalContext ?? new Dictionary<string, Expression>();
+    }
     
     private Expression? Parse(string expressionStr, out ParseError error, ParseOptions options)
     {
@@ -108,7 +112,7 @@ public sealed class ExpressionParser
                 _queue.Add(_builder);
                 return;
             case Flow.ParseVariable:
-                _builder = new OldVariableBuilder(_builder);
+                _builder = new OldVariableBuilder(_globalContext, _builder);
                 _queue.Add(_builder);
                 return;
             case Flow.ParseNewVariable:
@@ -127,23 +131,28 @@ public sealed class ExpressionParser
         }
     }
 
-    public static Expression? ParseExpression(string expression)
+    public Expression? ParseExpression(string expression)
     {
-        return new ExpressionParser().Parse(expression, out ParseError _, ParseOptions.ParseExpression);
+        return Parse(expression, out ParseError _, ParseOptions.ParseExpression);
     }
 
-    public static Expression? ParseExpression(string expression, out ParseError error)
+    public Expression? ParseExpression(string expression, out ParseError error)
     {
-        return new ExpressionParser().Parse(expression, out error, ParseOptions.ParseExpression);
+        return Parse(expression, out error, ParseOptions.ParseExpression);
     }
 
-    public static Lambda? ParseLambda(string expression)
+    public Lambda? ParseLambda(string expression)
     {
-        return new ExpressionParser().Parse(expression, out ParseError _, ParseOptions.ParseLambda) as Lambda;
+        return Parse(expression, out ParseError _, ParseOptions.ParseLambda) as Lambda;
     }
 
-    public static Lambda? ParseLambda(string expression, out ParseError error)
+    public Lambda? ParseLambda(string expression, out ParseError error)
     {
-        return new ExpressionParser().Parse(expression, out error, ParseOptions.ParseLambda) as Lambda;
+        return Parse(expression, out error, ParseOptions.ParseLambda) as Lambda;
+    }
+
+    public void AddToContext(string name, Expression expression)
+    {
+        _globalContext.Add(name, expression);
     }
 }

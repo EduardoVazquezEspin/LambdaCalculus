@@ -7,4 +7,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\LambdaCalculus\LambdaCalculus.csproj" />
+    </ItemGroup>
+
 </Project>

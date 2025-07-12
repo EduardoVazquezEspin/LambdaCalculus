@@ -22,7 +22,7 @@ public class BetaReductionDevelopmentTests
     [TestCase("(λx.x) [(λx.x) [(λx.x) [(λx.x) λx.x]]]", ExpectedResult = 4)]
     public int GetAllBetaReductionOptions_IsSuccessful_AndReturnsAnIntegerValue(string expressionStr)
     {
-        var expression = ExpressionParser.ParseExpression(expressionStr)!;
+        var expression = new LambdaParser().ParseExpression(expressionStr)!;
         expression.IsWellFormatted();
         return expression.GetAllBetaReductionOptions().Count;
     }
@@ -35,7 +35,7 @@ public class BetaReductionDevelopmentTests
     [TestCase("(λf.λy.f (f (f y))) (λn.λf.λx.f (n f x))", "λy.(λn.λf.λx.f (n f x)) ((λn.λf.λx.f (n f x)) ((λn.λf.λx.f (n f x)) y))")] // 3 ++
     public void BetaReduction_IsSuccessful_AndReturnsAValidExpression(string expressionStr, string expectedResult)
     {
-        var expression = ExpressionParser.ParseExpression(expressionStr)!;
+        var expression = new LambdaParser().ParseExpression(expressionStr)!;
         expression.IsWellFormatted();
         var options = expression.GetAllBetaReductionOptions();
         var result = expression.BetaReduction(options[0]);

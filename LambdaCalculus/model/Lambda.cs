@@ -6,7 +6,7 @@ public class Lambda : Expression, IParenthesisHolder
     public Expression Expression { get; private set; }
     public ParenthesisType ParenthesisType { get; set; }
 
-    public Lambda(
+    internal Lambda(
         Definition definition,
         Expression expression,
         ParenthesisType parenthesisType = ParenthesisType.Round

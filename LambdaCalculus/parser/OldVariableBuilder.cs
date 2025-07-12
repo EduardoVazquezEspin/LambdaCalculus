@@ -9,9 +9,11 @@ internal class OldVariableBuilder : AbstractExpressionBuilder
 
     private OldVariableBuilderState _state;
     private string _text;
+    private Dictionary<string, Expression> _globalContext;
 
-    public OldVariableBuilder(AbstractExpressionBuilder? parent = null) : base(parent)
+    public OldVariableBuilder(Dictionary<string, Expression> globalContext, AbstractExpressionBuilder? parent = null) : base(parent)
     {
+        _globalContext = globalContext;
         _state = OldVariableBuilderState.ReadingWhitespace;
         _text = "";
     }
@@ -62,13 +64,16 @@ internal class OldVariableBuilder : AbstractExpressionBuilder
     {
         error = null;
         var definition = GetLocalVariable(_text);
-        if (definition is null)
+        if (definition is not null)
         {
-            error = new FreeVariableBuilder{Length = _text.Length};
-            return null;
+            definition.Calls++;
+            return new Variable(definition);
         }
 
-        definition.Calls++;
-        return new Variable(definition);
+        if (_globalContext.TryGetValue(_text, out var expression))
+            return expression.Copy();
+
+        error = new FreeVariableBuilder{Length = _text.Length};
+        return null;
     }
 }

@@ -9,7 +9,7 @@ public class Definition : Expression
     internal uint Id { get; }
     internal uint? PreId { get; }
 
-    public Definition(string name, int calls, uint? preId = null)
+    internal Definition(string name, int calls, uint? preId = null)
     {
         PreId = preId;
         Id = Serial;

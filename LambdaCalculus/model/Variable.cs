@@ -4,7 +4,7 @@ public class Variable : Expression
 {
     public Definition Definition { get; }
 
-    public Variable(Definition definition)
+    internal Variable(Definition definition)
     {
         Definition = definition;
     }

@@ -27,7 +27,7 @@ public class LambdaCopyDevelopmentTests
     [TestCase("(λx.x) [(λx.x) [(λx.x) [(λx.x) λx.x]]]")]
     public void LambdaCopy_RunsSuccessfully_AndReturnsAValidExpression(string expressionStr)
     {
-        var expression = ExpressionParser.ParseExpression(expressionStr)!;
+        var expression = new LambdaParser().ParseExpression(expressionStr)!;
         var copy = expression.Copy();
         Assert.True(expression.IsWellFormatted());
         Assert.True(copy.IsWellFormatted());
@@ -40,7 +40,7 @@ public class LambdaCopyDevelopmentTests
     [TestCase("λx.λy.x (λx.x) x", 2)]
     public void LambdaCopy_RunsSuccessfully_KeepsCountOfVariableCalls(string expressionStr, int expectedCalls)
     {
-        var expression = ExpressionParser.ParseLambda(expressionStr)!;
+        var expression = new LambdaParser().ParseLambda(expressionStr)!;
         var copy = expression.Copy();
         Assert.That(expression.Definition.Calls, Is.EqualTo(expectedCalls));
         Assert.That(copy.Definition.Calls, Is.EqualTo(expectedCalls));
@@ -50,7 +50,7 @@ public class LambdaCopyDevelopmentTests
     public void LambdaCopy_RunsSuccessfully_MaintainsVariableReference1()
     {
         var expressionStr = "λx.x";
-        var expression = ExpressionParser.ParseLambda(expressionStr, out var error)!;
+        var expression = new LambdaParser().ParseLambda(expressionStr, out var error)!;
         Assert.That(error, Is.InstanceOf<NoError>());
         var copy = expression.Copy();
         Assert.True(expression.IsWellFormatted());
@@ -65,7 +65,7 @@ public class LambdaCopyDevelopmentTests
     public void LambdaCopy_RunsSuccessfully_MaintainsVariableReference2()
     {
         var expressionStr = "λx.λy.x";
-        var expression = ExpressionParser.ParseLambda(expressionStr, out var error)!;
+        var expression = new LambdaParser().ParseLambda(expressionStr, out var error)!;
         Assert.That(error, Is.InstanceOf<NoError>());
         var copy = expression.Copy();
         Assert.True(expression.IsWellFormatted());
@@ -80,7 +80,7 @@ public class LambdaCopyDevelopmentTests
     public void LambdaCopy_RunsSuccessfully_MaintainsVariableReference3()
     {
         var expressionStr = "λx.λy.y";
-        var expression = ExpressionParser.ParseLambda(expressionStr, out var error)!;
+        var expression = new LambdaParser().ParseLambda(expressionStr, out var error)!;
         var childLambda = (Lambda) expression.Expression;
         Assert.That(error, Is.InstanceOf<NoError>());
         var copy = expression.Copy();

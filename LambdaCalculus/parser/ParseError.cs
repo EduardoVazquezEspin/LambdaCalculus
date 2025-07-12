@@ -8,18 +8,22 @@ public abstract class ParseError
 public class NoError : ParseError
 {
     public override string Message => "OK";
+    
+    internal NoError() { }
 }
 
 public class SomethingWentWrong : ParseError
 {
     public override string Message => "Something went wrong while parsing the expression";
+    
+    internal SomethingWentWrong() { }
 }
 
 public class InvalidCharacter : ParseError
 {
     public override string Message { get; }
 
-    public InvalidCharacter(string expressionStr, int index)
+    internal InvalidCharacter(string expressionStr, int index)
     {
         var first = expressionStr[..index];
         var character = expressionStr[index];
@@ -31,11 +35,15 @@ public class InvalidCharacter : ParseError
 public class UnfinishedExpression : ParseError
 {
     public override string Message => "Unfinished expression";
+    
+    internal UnfinishedExpression() {}
 }
 
 public class EmptyExpression : ParseError
 {
     public override string Message => "Empty expression";
+    
+    internal EmptyExpression () {}
 }
 
 internal class FreeVariableBuilder : ParseError
@@ -43,12 +51,14 @@ internal class FreeVariableBuilder : ParseError
     public override string Message => "";
     
     public int Length { get; set; }
+    
+    internal FreeVariableBuilder() { }
 }
 
 public class FreeVariable : ParseError
 {
     public override string Message { get; }
-    public FreeVariable(string expressionStr, int indexStart, int indexEnd)
+    internal FreeVariable(string expressionStr, int indexStart, int indexEnd)
     {
         var first = expressionStr[..indexStart];
         var variable = expressionStr.Substring(indexStart, indexEnd - indexStart);

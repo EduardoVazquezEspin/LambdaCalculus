@@ -7,7 +7,7 @@ public enum ParenthesisType
     Curly
 }
 
-public static class ParenthesisTypeHelpers {
+internal static class ParenthesisTypeHelpers {
     public static char GetOpenChar(this ParenthesisType type) => 
         type switch
         {

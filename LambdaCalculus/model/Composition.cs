@@ -8,7 +8,7 @@ public class Composition : Expression, IParenthesisHolder
 
     public ParenthesisType ParenthesisType { get; set; }
 
-    public Composition(Expression leftExpression, Expression rightExpression, ParenthesisType parenthesisType = ParenthesisType.Round)
+    internal Composition(Expression leftExpression, Expression rightExpression, ParenthesisType parenthesisType = ParenthesisType.Round)
     {
         LeftExpression = leftExpression;
         RightExpression = rightExpression;

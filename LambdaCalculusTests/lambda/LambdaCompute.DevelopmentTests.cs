@@ -15,7 +15,7 @@ public class LambdaComputeDevelopmentTests
     [TestCase("(λb1.λb2.b1 b2 λx.λy.y) (λx.λy.y) λx.λy.y", "λx.λy.y")]
     public void LambdaCompute_RunsSuccessfully_AndReturnsTheCorrectResult(string expressionStr, string resultStr)
     {
-        var expression = ExpressionParser.ParseExpression(expressionStr)!;
+        var expression = new LambdaParser().ParseExpression(expressionStr)!;
         var result = expression.Compute();
         result.IsWellFormatted();
         Assert.That(result.ToString(), Is.EqualTo(resultStr));
@@ -32,10 +32,10 @@ public class LambdaComputeDevelopmentTests
     [TestCase("(λb1.λb2.b1 b2 λx.λy.y) (λx.λy.y) λx.λy.y", "λn.λm.m")]
     public void LambdaCompute_RunsSuccessfully_AndReturnsEquivalentResult(string expressionStr, string resultStr)
     {
-        var expression = ExpressionParser.ParseExpression(expressionStr)!;
+        var expression = new LambdaParser().ParseExpression(expressionStr)!;
         var result = expression.Compute();
         result.IsWellFormatted();
-        var expected = ExpressionParser.ParseExpression(resultStr);
+        var expected = new LambdaParser().ParseExpression(resultStr);
         Assert.That(result.ToString(), Is.Not.EqualTo(resultStr));
         Assert.True(result.Equals(expected));
     }
@@ -86,10 +86,10 @@ public class LambdaComputeDevelopmentTests
     [TestCase("[λg.g g] [λr.λn.[λb.λx.λy.b x y] [(λn.n (λx.λx.λy.y) λx.λy.x) n] [λf.λx.f x] [(λm.λn.λf.m (n f)) n (r r ((λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) n))]] λf.λx.f (f (f (f x)))", "λf.λx.f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f x)))))))))))))))))))))))")] // ! 4 = 24
     public void LambdaCompute_RunsSuccessfully_GenericListOfPositiveCases(string expressionStr, string resultStr)
     {
-        var expression = ExpressionParser.ParseExpression(expressionStr)!;
+        var expression = new LambdaParser().ParseExpression(expressionStr)!;
         var result = expression.Compute();
         result.IsWellFormatted();
-        var expected = ExpressionParser.ParseExpression(resultStr);
+        var expected = new LambdaParser().ParseExpression(resultStr);
         Assert.True(result.Equals(expected));
     }
 }

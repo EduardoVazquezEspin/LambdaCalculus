@@ -14,7 +14,7 @@ public class LambdaSimplifyDevelopmentTests
     [TestCase("[[λx.λy.{{([{([{((x)) [y]}])}]) {λz.z}}}]]", "λx.λy.x y λz.z")] // A bit of everything
     public void LambdaSimplify_RunsSuccessfully_AndReturnsSimplerLambda(string expression, string simplified)
     {
-        var lambda = ExpressionParser.ParseExpression(expression, out var error);
+        var lambda = new LambdaParser().ParseExpression(expression, out var error);
         Assert.That(error, Is.InstanceOf<NoError>());
         Assert.That(lambda.ToString(), Is.EqualTo(simplified));
         Assert.True(lambda.IsWellFormatted());

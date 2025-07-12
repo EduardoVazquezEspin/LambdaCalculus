@@ -190,7 +190,14 @@ PRED:
 
 ```6 → λf.λx.f (f (f (f (f (f x)))))```
 
+# Global Context and Aliases
 
+Needs to be injected (in parser). 
 
+If we stop making parsing global, we can inject it once into the ExpressionParser instance
+
+Rename ExpressionParser to LambdaParser
+
+Expose a method from the LambdaParser to add/remove elements to GlobalContext 
 
 # Console Cryptic Commands implementation
