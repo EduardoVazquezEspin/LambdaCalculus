@@ -33,7 +33,7 @@ public class LambdaComputeDevelopmentTests
     public void LambdaCompute_RunsSuccessfully_AndReturnsEquivalentResult(string expressionStr, string resultStr)
     {
         var expression = ExpressionParser.ParseExpression(expressionStr)!;
-        var result = expression.Compute();;
+        var result = expression.Compute();
         result.IsWellFormatted();
         var expected = ExpressionParser.ParseExpression(resultStr);
         Assert.That(result.ToString(), Is.Not.EqualTo(resultStr));
@@ -63,6 +63,27 @@ public class LambdaComputeDevelopmentTests
     [TestCase("(λn.λf.λx.f (n f x)) λf.λx.x", "λf.f")] // ++ 0 = 1
     [TestCase("(λn.λf.λx.f (n f x))((λn.λf.λx.f (n f x)) λf.λx.x)", "λf.λx.f (f x)")] // ++ (++ 0) = 2
     [TestCase("(λn.λf.λx.f (n f x))((λn.λf.λx.f (n f x))((λn.λf.λx.f (n f x)) λf.λx.x))", "λf.λx.f(f (f x))")] // ++ (++ (++ 0)) = 3
+    [TestCase("(λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) λf.λx.f (f (f x))", "λf.λx.f (f x)")] // -- 3 = 2
+    [TestCase("(λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) λf.λx.f (f x)", "λf.f")] // -- 2 = 1
+    [TestCase("(λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) λf.λx.f x", "λf.λx.x")] // -- 1 = 0
+    [TestCase("(λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) λf.λx.x", "λf.λx.x")] // -- 0 = 0
+    [TestCase("(λn.n (λx.λx.λy.y) λx.λy.x) λf.λx.x", "λx.λy.x")] // ==0 0 = True
+    [TestCase("(λn.n (λx.λx.λy.y) λx.λy.x) λf.λx.f x", "λx.λy.y")] // ==0 1 = False
+    [TestCase("(λn.n (λx.λx.λy.y) λx.λy.x) λf.λx.f (f x)", "λx.λy.y")] // ==0 2 = False
+    [TestCase("[λm.λn.n (λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m] (λf.λx.x) λf.λx.x", "λf.λx.x")] // - 0 0 = 0
+    [TestCase("[λm.λn.n (λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m] (λf.λx.f x) λf.λx.x", "λf.f")] // - 1 0 = 1
+    [TestCase("[λm.λn.n (λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m] (λf.λx.x) λf.λx.f x", "λf.λx.x")] // - 0 1 = 0
+    [TestCase("[λm.λn.n (λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m] (λf.λx.f x) λf.λx.f x", "λf.λx.x")] // - 1 1 = 0 
+    [TestCase("[λm.λn.n (λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m] (λf.λx.f (f x)) λf.λx.f x", "λf.f")] // - 2 1 = 1
+    [TestCase("[λm.λn.n (λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m] (λf.λx.f x) λf.λx.f (f x)", "λf.λx.x")] // - 1 2 = 0
+    [TestCase("[λm.λn.n (λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m] (λf.λx.f (f x)) λf.λx.x", "λf.λx.f (f x)")] // - 2 0 = 2
+    [TestCase("[λm.λn.n (λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m] (λf.λx.x) λf.λx.f (f x)", "λf.λx.x")] // - 0 2 = 0
+    [TestCase("[λm.λn.n (λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m] (λf.λx.f (f x)) λf.λx.f (f x)", "λf.λx.x")] // - 2 2 = 0 
+    [TestCase("[λm.λn.[λn.n (λx.λx.λy.y) λx.λy.x] {[λm.λn.n (λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m] m n}] (λf.λx.x) λf.λx.f x", "λx.λy.x")] // ≤ 0 1
+    [TestCase("[λm.λn.[λn.n (λx.λx.λy.y) λx.λy.x] {[λm.λn.n (λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m] m n}] (λf.λx.f x) λf.λx.f x", "λx.λy.x")] // ≤ 1 1
+    [TestCase("[λm.λn.[λn.n (λx.λx.λy.y) λx.λy.x] {[λm.λn.n (λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m] m n}] (λf.λx.f x) λf.λx.x", "λx.λy.y")] // ≤ 0 1
+    [TestCase("[λg.g g] [λr.λn.[λb.λx.λy.b x y] [(λn.n (λx.λx.λy.y) λx.λy.x) n] [λf.λx.f x] [(λm.λn.λf.m (n f)) n (r r ((λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) n))]] λf.λx.f (f (f x))", "λf.λx.f (f (f (f (f (f x)))))")] // ! 3 = 6
+    [TestCase("[λg.g g] [λr.λn.[λb.λx.λy.b x y] [(λn.n (λx.λx.λy.y) λx.λy.x) n] [λf.λx.f x] [(λm.λn.λf.m (n f)) n (r r ((λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) n))]] λf.λx.f (f (f (f x)))", "λf.λx.f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f x)))))))))))))))))))))))")] // ! 4 = 24
     public void LambdaCompute_RunsSuccessfully_GenericListOfPositiveCases(string expressionStr, string resultStr)
     {
         var expression = ExpressionParser.ParseExpression(expressionStr)!;

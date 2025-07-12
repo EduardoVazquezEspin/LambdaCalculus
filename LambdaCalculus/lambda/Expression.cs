@@ -57,40 +57,37 @@ public abstract class Expression
     public Expression Compute()
     {
         var element = EtaReduction();
-        var queue = new List<KeyValuePair<Expression, BetaReductionOption>> { };
-        var options0 = element.GetAllBetaReductionOptions();
-        if (options0.Count == 0)
-            return element;
+        var queue = new PriorityQueue<Expression, int>();
 
-        int minCount = options0.Count;
+        int minCount = -1;
         Expression minValue = element;
-        
-        foreach (var option in options0)
-            queue.Add(new KeyValuePair<Expression, BetaReductionOption>(element, option));
-        var visited = new HashSet<string> {GetHashCode()};
 
-        while (queue.Any())
+        var elementHash = element.GetHashCode();
+        var visited = new HashSet<string> {elementHash};
+        queue.Enqueue(element, elementHash.Length);
+
+        while (queue.TryDequeue(out var top, out _) )
         {
-            var top = queue[0];
-            queue.RemoveAt(0);
-            var copy = top.Key.Copy();
-            var result = copy
-                .BetaReduction(top.Value)
-                .EtaReduction();
-            var hash = result.GetHashCode();
-            if (!visited.Contains(hash))
+            var options = top.GetAllBetaReductionOptions();
+            if (options.Count == 0)
+                return top;
+            if (minCount == -1 || minCount > options.Count)
             {
-                visited.Add(hash);
-                var options = result.GetAllBetaReductionOptions();
-                if (options.Count == 0)
-                    return result;
-                if (minCount > options.Count)
+                minCount = options.Count;
+                minValue = top;
+            }
+            foreach (var option in options)
+            {
+                var copy = top.Copy();
+                var result = copy
+                    .BetaReduction(option)
+                    .EtaReduction();
+                var hash = result.GetHashCode();
+                if (!visited.Contains(hash))
                 {
-                    minCount = options.Count;
-                    minValue = result;
+                    visited.Add(hash);
+                    queue.Enqueue(result, hash.Length);
                 }
-                foreach (var option in options)
-                    queue.Add(new KeyValuePair<Expression, BetaReductionOption>(result, option));
             }
         }
 

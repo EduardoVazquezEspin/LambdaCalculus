@@ -172,21 +172,21 @@ PRED:
 
 ```==0 → λn.n (λx.FALSE) TRUE → λn.n (λx.λx.λy.y) λx.λy.x```
 
-```≤ → λm.λn.==0 (- m n) → λm.λn.(λn.n (λx.λx.λy.y) λx.λy.x) ((λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m n)```
+```≤ → λm.λn.==0 (- m n) → λm.λn.[λn.n (λx.λx.λy.y) λx.λy.x] {[λm.λn.n (λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m] m n}```
 
 ```Y → λg.(λx.g (x x)) (λx.g (x x))```
 
 ```G → λr.λn.IF (==0 n) 1 (* n (r (-- n)))```
 
-```G → λr.λn.(λb.λx.λy.b x y) ((λn.n (λx.λx.λy.y) λx.λy.x) n) (λf.λx.f x) ((λm.λn.λf.m (n f)) n (r ((λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) n)))```
+```G → λr.λn.[λb.λx.λy.b x y] [(λn.n (λx.λx.λy.y) λx.λy.x) n] [λf.λx.f x] [(λm.λn.λf.m (n f)) n (r ((λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) n))]```
 
 ```! → Y G```
 
-```! 4 → (λr.λn.(λb.λx.λy.b x y) ((λn.n (λx.λx.λy.y) λx.λy.x) n) (λf.λx.f x) ((λm.λn.λf.m (n f)) n (r ((λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) n)))) (λf.λx.f (f (f (f x))))```
+```! 4 → [λg.(λx.g (x x)) (λx.g (x x))] [λr.λn.[λb.λx.λy.b x y] [(λn.n (λx.λx.λy.y) λx.λy.x) n] [λf.λx.f x] [(λm.λn.λf.m (n f)) n (r ((λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) n))]] λf.λx.f (f (f (f x)))```
 
 ```24 → λf.λx.f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f x)))))))))))))))))))))))```
 
-```! 3 → (λr.λn.(λb.λx.λy.b x y) ((λn.n (λx.λx.λy.y) λx.λy.x) n) (λf.λx.f x) ((λm.λn.λf.m (n f)) n (r ((λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) n)))) (λf.λx.f (f (f x)))```
+```! 3 → [λg.(λx.g (x x)) (λx.g (x x))] [λr.λn.[λb.λx.λy.b x y] [(λn.n (λx.λx.λy.y) λx.λy.x) n] [λf.λx.f x] [(λm.λn.λf.m (n f)) n (r ((λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) n))]] λf.λx.f (f (f x))```
 
 ```6 → λf.λx.f (f (f (f (f (f x)))))```
 
