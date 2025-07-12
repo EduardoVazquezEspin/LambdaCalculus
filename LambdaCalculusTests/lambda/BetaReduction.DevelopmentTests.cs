@@ -1,4 +1,4 @@
-using LambdaCalculus.lambda;
+using LambdaCalculus;
 
 namespace LambdaCalculusTests.lambda;
 
