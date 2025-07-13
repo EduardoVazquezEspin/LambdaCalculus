@@ -34,6 +34,16 @@ public class ConsoleApp
     {
         var inputManager = ManagerInjector.InputManager;
 
+        inputManager.AddOnTypeHandlers(
+            new OnTypeSpecialCharactersHandler(ManagerInjector),
+            new OnTypeEnterHandler(ManagerInjector),
+            new OnTypeLHandler(ManagerInjector),
+            new OnTypeBiggerThanHandler(ManagerInjector),
+            new OnTypeArrowHandler(ManagerInjector),
+            new OnTypeDefaultHandler(ManagerInjector)
+        );
+        
+        inputManager.AddOnSubmitHandler(new AddToHistoryHandler(ManagerInjector), new HandlerOptions {Priority = -1});
         inputManager.AddOnSubmitHandlers(
             new DefineGlobalHandler(ManagerInjector),
             new LoadFileHandler(ManagerInjector)

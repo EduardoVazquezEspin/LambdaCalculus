@@ -7,79 +7,93 @@ public class HandlerOptions
 
 public class InputManager
 {
-    private readonly  List<List<HandlerNode>>  _onSubmitHandlers;
-    private readonly  List<int> _onSubmitPriorities;
+    private readonly  List<KeyValuePair<List<OnSubmitHandlerNode>, int>>  _onSubmitHandlers;
+    private readonly List<OnTypeHandlerNode> _onTypeHandlers;
+    public CursorController CursorController { get; private set; }
 
     public InputManager()
     {
-        _onSubmitHandlers = new List<List<HandlerNode>>();
-        _onSubmitPriorities = new List<int>();
+        _onSubmitHandlers = new List<KeyValuePair<List<OnSubmitHandlerNode>, int>>();
+        _onTypeHandlers = new List<OnTypeHandlerNode>();
     }
 
-    public Action AddOnSubmitHandler(HandlerNode handlerNode, HandlerOptions? options = null)
+    public Action AddOnSubmitHandler(OnSubmitHandlerNode handlerNode, HandlerOptions? options = null)
     {
         options ??= new HandlerOptions();
         var priority = options.Priority;
-        var index = _onSubmitPriorities.IndexOf(priority);
-        List<HandlerNode> list;
-        if (index == -1)
+        var samePriority = _onSubmitHandlers.Where(it => it.Value == priority).ToList();
+        var list = samePriority.Count != 0 ? samePriority[0].Key : null;
+        if (list is null)
         {
-            list = new List<HandlerNode>();
-            _onSubmitPriorities.Add(priority);
-            _onSubmitHandlers.Add(list);
-
-            var isSorted = false;
-            for (int i = _onSubmitPriorities.Count - 2; !isSorted && i >= 0; i--)
-            {
-                isSorted = _onSubmitPriorities[i] < priority;
-                if (!isSorted)
-                {
-                    (_onSubmitPriorities[i], _onSubmitPriorities[i + 1]) = (_onSubmitPriorities[i + 1], _onSubmitPriorities[i]);
-                    (_onSubmitHandlers[i], _onSubmitHandlers[i + 1]) = (_onSubmitHandlers[i + 1], _onSubmitHandlers[i]);
-                }
-            }
-        }
-        else
-        {
-            list = _onSubmitHandlers[index];
+            list = new List<OnSubmitHandlerNode>();
+            _onSubmitHandlers.Add(new KeyValuePair<List<OnSubmitHandlerNode>, int>(list, priority));
+            _onSubmitHandlers.Sort((a,b) => a.Value -b.Value);
         }
         list.Add(handlerNode);
 
         return () => { list.Remove(handlerNode); };
     }
 
-    public Action[] AddOnSubmitHandlers(params HandlerNode[] handlerNodes)
+    public Action[] AddOnSubmitHandlers(params OnSubmitHandlerNode[] handlerNodes)
     {
         return handlerNodes.Select(it => AddOnSubmitHandler(it)).ToArray();
+    }
+
+    public Action AddOnTypeHandler(OnTypeHandlerNode handlerNode)
+    {
+        _onTypeHandlers.Add(handlerNode);
+        return () => { _onTypeHandlers.Add(handlerNode); };
+    }
+
+    public Action[] AddOnTypeHandlers(params OnTypeHandlerNode[] handlerNodes)
+    {
+        return handlerNodes.Select(AddOnTypeHandler).ToArray();
     }
 
     public async Task<HandlerResult> HandleOnSubmit(string input)
     {
         Flow flow = Flow.Continue;
-        HandlerResult finalResult = new HandlerResult(false, new List<string>(), Flow.Continue);
-        for (int i = 0; flow == Flow.Continue && i < _onSubmitPriorities.Count; i++)
+        HandlerResult? finalResult = null;
+        for (int i = 0; flow == Flow.Continue && i < _onSubmitHandlers.Count; i++)
         {
-            var list = _onSubmitHandlers[i];
+            var list = _onSubmitHandlers[i].Key;
             for (int j = 0; flow == Flow.Continue && j < list.Count; j++)
             {
                 var handlerNode = list[j];
-                if (handlerNode is HandlerNodeSync handlerNodeSync)
+                if (handlerNode is OnSubmitHandlerNodeSync handlerNodeSync)
                     finalResult = handlerNodeSync.HandleOnSubmit(input);
                 else
-                    finalResult = await ((HandlerNodeAsync) handlerNode).HandleOnSubmit(input);
+                    finalResult = await ((OnSubmitHandlerNodeAsync) handlerNode).HandleOnSubmit(input);
                 flow = finalResult.Flow;
             }
         }
-        return finalResult;
+        return finalResult ?? new HandlerResult(false, new List<string>(), Flow.Continue);
+    }
+
+    public async Task<HandlerResult> HandleOnType(ConsoleKeyInfo c)
+    {
+        for (int i = 0; i < _onTypeHandlers.Count; i++)
+        {
+            var handler = _onTypeHandlers[i];
+            HandlerResult result;
+            if (handler is OnTypeHandlerNodeSync syncHandler)
+                result = syncHandler.HandleOnType(c);
+            else
+                result = await ((OnTypeHandlerNodeAsync) handler).HandleOnType(c);
+            if (result.Flow != Flow.Continue)
+                return result;
+        }
+        return new HandlerResult(false, new List<string>(), Flow.Continue);
     }
 
     public async Task Run()
     {
+        CursorController = new CursorController();
         bool end = false;
         while (!end)
         {
-            var line = Console.ReadLine() ?? "";
-            var result = await HandleOnSubmit(line);
+            var c = Console.ReadKey();
+            var result = await HandleOnType(c);
             end = result.Flow == Flow.EndExecution;
         }
     }

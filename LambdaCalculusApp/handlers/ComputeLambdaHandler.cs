@@ -4,7 +4,7 @@ using LambdaCalculusApp.managers.input;
 
 namespace LambdaCalculusApp.handlers;
 
-public class ComputeLambdaHandler : HandlerNodeSync
+public class ComputeLambdaHandler : OnSubmitHandlerNodeSync
 {
     public ComputeLambdaHandler(ManagerInjector managerInjector) : base(managerInjector) { }
 

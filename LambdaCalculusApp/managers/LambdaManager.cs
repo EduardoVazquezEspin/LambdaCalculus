@@ -6,11 +6,13 @@ public class LambdaManager
 {
     public LambdaParser Parser { get; }
     
-    public List<Expression> History { get; private set; }
+    public List<Expression> ResultHistory { get; private set; }
+    public List<string> InputHistory { get; set; }
 
     public LambdaManager()
     {
         Parser = new LambdaParser();
-        History = new List<Expression>();
+        ResultHistory = new List<Expression>();
+        InputHistory = new List<string>();
     }
 }

@@ -4,7 +4,7 @@ using LambdaCalculusApp.managers.input;
 
 namespace LambdaCalculusApp.handlers;
 
-public class DefineGlobalHandler : HandlerNodeSync
+public class DefineGlobalHandler : OnSubmitHandlerNodeSync
 {
     public DefineGlobalHandler(ManagerInjector managerInjector) : base(managerInjector) { }
 
@@ -27,7 +27,7 @@ public class DefineGlobalHandler : HandlerNodeSync
         }
 
         var result = ManagerInjector.LambdaManager.Parser.TryAddToContext(name, expression);
-        ManagerInjector.LambdaManager.History.Add(expression);
+        ManagerInjector.LambdaManager.ResultHistory.Add(expression);
 
         if (!result)
         {

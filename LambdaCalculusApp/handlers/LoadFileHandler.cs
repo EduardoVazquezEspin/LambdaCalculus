@@ -6,7 +6,7 @@ using LambdaCalculusApp.managers.input;
 
 namespace LambdaCalculusApp.handlers;
 
-public class LoadFileHandler : HandlerNodeSync
+public class LoadFileHandler : OnSubmitHandlerNodeSync
 {
     public LoadFileHandler(ManagerInjector managerInjector) : base(managerInjector) { }
 

@@ -3,7 +3,7 @@ using LambdaCalculusApp.managers.input;
 
 namespace LambdaCalculusApp.handlers;
 
-public sealed class InvalidCrypticHandler : HandlerNodeSync
+public sealed class InvalidCrypticHandler : OnSubmitHandlerNodeSync
 {
     public override HandlerResult HandleOnSubmit(string input)
     {

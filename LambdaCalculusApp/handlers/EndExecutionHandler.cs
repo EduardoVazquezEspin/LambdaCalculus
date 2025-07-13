@@ -4,7 +4,7 @@ using LambdaCalculusApp.managers.input;
 
 namespace LambdaCalculusApp.handlers;
 
-public sealed class EndExecutionHandler : HandlerNodeSync
+public sealed class EndExecutionHandler : OnSubmitHandlerNodeSync
 {
     private readonly Regex _endCrypticRegex = new(@"^\s*(#|EXIT|END|FI|THE\s*END|FIN|E)\s*#?\s*$", RegexOptions.IgnoreCase);
 
