@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace LambdaCalculus;
 
 public class Composition : Expression, IParenthesisHolder
@@ -16,7 +18,7 @@ public class Composition : Expression, IParenthesisHolder
         RightExpression.Parent = this;
         ParenthesisType = parenthesisType;
     }
-    
+
     public override bool IsWellFormatted()
     {
         if (LeftExpression.Parent != this || !LeftExpression.IsWellFormatted())

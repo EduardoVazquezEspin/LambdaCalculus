@@ -15,11 +15,11 @@ public sealed class LambdaParser
     private Expression? _lastExpression;
     private AbstractExpressionBuilder? _builder;
     private List<AbstractExpressionBuilder> _queue = null!;
-    private readonly Dictionary<string, Expression> _globalContext;
+    private readonly AliasManager _aliasManager;
 
-    public LambdaParser(Dictionary<string, Expression>? globalContext = null)
+    public LambdaParser()
     {
-        _globalContext = globalContext ?? new Dictionary<string, Expression>();
+        _aliasManager = new AliasManager();
     }
     
     private Expression? Parse(string expressionStr, out ParseError error, ParseOptions options)
@@ -112,7 +112,7 @@ public sealed class LambdaParser
                 _queue.Add(_builder);
                 return;
             case Flow.ParseVariable:
-                _builder = new OldVariableBuilder(_globalContext, _builder);
+                _builder = new OldVariableBuilder(_aliasManager, _builder);
                 _queue.Add(_builder);
                 return;
             case Flow.ParseNewVariable:
@@ -153,6 +153,11 @@ public sealed class LambdaParser
 
     public void AddToContext(string name, Expression expression)
     {
-        _globalContext.Add(name, expression);
+        _aliasManager.AddToContext(name, expression);
+    }
+
+    public bool TryGetAlias(Expression expression, out string alias)
+    {
+        return _aliasManager.TryGetAlias(expression, out alias);
     }
 }

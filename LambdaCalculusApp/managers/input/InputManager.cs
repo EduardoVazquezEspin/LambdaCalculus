@@ -56,7 +56,7 @@ public class InputManager
     public async Task<HandlerResult> HandleOnSubmit(string input)
     {
         Flow flow = Flow.Continue;
-        HandlerResult finalResult = new HandlerResult(Flow.Continue);
+        HandlerResult finalResult = new HandlerResult(false, new List<string>(), Flow.Continue);
         for (int i = 0; flow == Flow.Continue && i < _onSubmitPriorities.Count; i++)
         {
             var list = _onSubmitHandlers[i];

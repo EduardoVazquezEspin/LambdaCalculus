@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace LambdaCalculus;
 
 public class Variable : Expression

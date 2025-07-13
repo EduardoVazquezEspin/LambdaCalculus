@@ -26,4 +26,23 @@ public class ViewManager
     {
         Console.WriteLine("Bye!");
     }
+
+    public void Write(ConsoleColor color, params string[] strings)
+    {
+        var originalColor = Console.ForegroundColor;
+        Console.ForegroundColor = color;
+        foreach (var str in strings)
+            Console.WriteLine(str);
+        Console.ForegroundColor = originalColor;
+        
+        AddSom();
+    }
+    
+    public void Write(params string[] strings)
+    {
+        foreach (var str in strings)
+            Console.WriteLine(str);
+        
+        AddSom();
+    }
 }

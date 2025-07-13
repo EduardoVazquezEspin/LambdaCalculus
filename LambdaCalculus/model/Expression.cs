@@ -1,3 +1,6 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
+
 namespace LambdaCalculus;
 
 public abstract class Expression
@@ -11,6 +14,7 @@ public abstract class Expression
         return ToString(cache, taken);
     }
     internal abstract string ToString(Dictionary<uint, string> cache, HashSet<string> taken);
+
     public new abstract string GetHashCode();
 
     public new bool Equals(object? obj)

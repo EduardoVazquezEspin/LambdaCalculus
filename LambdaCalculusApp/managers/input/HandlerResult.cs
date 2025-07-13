@@ -13,14 +13,7 @@ public class HandlerResult
     public List<string> Messages { get; set; }
     public Flow Flow { get; set; }
 
-    public HandlerResult(Flow flow = Flow.StopPropagation)
-    {
-        Success = false;
-        Messages = new List<string>();
-        Flow = flow;
-    }
-
-    public HandlerResult(bool success, List<string> messages, Flow flow = Flow.StopPropagation)
+    public HandlerResult(bool success, List<string> messages, Flow flow)
     {
         Success = success;
         Messages = messages;

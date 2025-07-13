@@ -22,7 +22,8 @@ public class ConsoleApp
         ManagerInjector = new ManagerInjector
         {
             InputManager = new InputManager(),
-            ViewManager = new ViewManager()
+            ViewManager = new ViewManager(),
+            LambdaManager = new LambdaManager()
         };
 
         return this;
@@ -31,9 +32,12 @@ public class ConsoleApp
     protected virtual ConsoleApp AddHandlers()
     {
         var inputManager = ManagerInjector.InputManager;
-        
+
+        inputManager.AddOnSubmitHandlers(
+            new DefineGlobalHandler(ManagerInjector)
+        );
+        inputManager.AddOnSubmitHandler(new ComputeLambdaHandler(ManagerInjector), new HandlerOptions {Priority = 500});
         inputManager.AddOnSubmitHandler(new EndExecutionHandler(ManagerInjector), new HandlerOptions {Priority = 998});
-        inputManager.AddOnSubmitHandler(new RepeatCryptic(ManagerInjector), new HandlerOptions {Priority = 999});
         inputManager.AddOnSubmitHandler(new InvalidCrypticHandler(ManagerInjector), new HandlerOptions {Priority = 1000});
 
         return this;

@@ -11,7 +11,7 @@ public sealed class EndExecutionHandler : HandlerNodeSync
     public override HandlerResult HandleOnSubmit(string input)
     {
         if (!_endCrypticRegex.Match(input.ToUpper()).Success)
-            return new HandlerResult(Flow.Continue);
+            return new HandlerResult(false, new List<string>() ,Flow.Continue);
 
         ManagerInjector.ViewManager.EndSessionView();
         return new HandlerResult(true, new List<string>(), Flow.EndExecution);

@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace LambdaCalculus;
 
 public class Lambda : Expression, IParenthesisHolder
@@ -18,7 +20,6 @@ public class Lambda : Expression, IParenthesisHolder
         Expression.Parent = this;
         ParenthesisType = parenthesisType;
     }
-
     public override bool IsWellFormatted()
     {
         if (Definition.Parent != this || !Definition.IsWellFormatted())
@@ -72,7 +73,7 @@ public class Lambda : Expression, IParenthesisHolder
             return body;
         return $"({body})";
     }
-    
+
     public override Expression EtaReduction()
     {
         Expression = Expression.EtaReduction();
