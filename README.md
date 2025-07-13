@@ -205,3 +205,17 @@ Expose a method from the LambdaParser to add/remove elements to GlobalContext
 # Console Cryptic Commands implementation
 
 // * + + 3 4 2
+
+0 → λf.λx.x
+1 → λf.λx.f x
+2 → λf.λx.f (f x)
+3 → λf.λx.f (f (f x))
+4 → λf.λx.f (f (f (f x)))
+5 → λf.λx.f (f (f (f (f x))))
+-- → λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)
++ → λn.λm.λf.λx.n f (m f x)
+- → λm.λn.n -- m → λm.λn.n (λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m
+* → λm.λn.λf.m (n f)
+^ -> λm.λn.n m
+==0 → λn.n (λx.FALSE) TRUE → λn.n (λx.λx.λy.y) λx.λy.x
+≤ → λm.λn.==0 (- m n) → λm.λn.[λn.n (λx.λx.λy.y) λx.λy.x] {[λm.λn.n (λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m] m n}

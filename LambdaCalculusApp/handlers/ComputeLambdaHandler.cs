@@ -8,7 +8,7 @@ public class ComputeLambdaHandler : HandlerNodeSync
 {
     public ComputeLambdaHandler(ManagerInjector managerInjector) : base(managerInjector) { }
 
-    private Regex _lambdaRegex = new Regex(@"^\s*(?<lambda>.+)\s*$");
+    private readonly Regex _lambdaRegex = new Regex(@"^\s*(?<lambda>.+)\s*$");
     
     public override HandlerResult HandleOnSubmit(string input)
     {
@@ -21,7 +21,7 @@ public class ComputeLambdaHandler : HandlerNodeSync
 
         if (error is not LambdaCalculus.NoError)
         {
-            ManagerInjector.ViewManager.Write(error.Message);
+            ManagerInjector.ViewManager.Write(ConsoleColor.Red, error.Message);
             return new HandlerResult(false, new List<string> {error.Message}, Flow.StopPropagation);
         }
             

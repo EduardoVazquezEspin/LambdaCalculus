@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace LambdaCalculus;
 
-public class AliasManager
+internal class AliasManager
 {
     private DictionaryLambdaDefinition _defaultLambdaDefinition;
     private List<ILambdaDefinition> _lambdaDefinitions;
@@ -12,23 +12,14 @@ public class AliasManager
         _lambdaDefinitions = new List<ILambdaDefinition>();
     }
 
-    internal void AddToContext(string name, Expression expression)
+    internal bool TryAddToContext(string name, Expression expression)
     {
-        _defaultLambdaDefinition.AddToContext(name, expression);
+        return _defaultLambdaDefinition.TryAddToContext(name, expression);        
     }
 
     internal void AddLambdaDefinition(ILambdaDefinition lambdaDefinition)
     {
         _lambdaDefinitions.Add(lambdaDefinition);
-    }
-
-    internal void AddLambdaDictionary(List<KeyValuePair<string, Expression>> definitions)
-    {
-        var dictionaryLambdaDefinition = new DictionaryLambdaDefinition();
-        foreach(var (name, expression) in definitions)
-            dictionaryLambdaDefinition.AddToContext(name, expression);
-        
-        _lambdaDefinitions.Add(dictionaryLambdaDefinition);
     }
 
     internal bool TryGetExpression(string name, [NotNullWhen(true)] out Expression? expression)

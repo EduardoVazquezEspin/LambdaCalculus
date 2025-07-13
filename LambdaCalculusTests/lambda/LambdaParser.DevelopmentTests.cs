@@ -71,7 +71,7 @@ public class LambdaParserDevelopmentTests
             .Select(pair => new KeyValuePair<string,Expression>(pair[0] ,parser.ParseExpression(pair[1])!));
         
         foreach (var (name, exp) in parsedContext)
-            parser.AddToContext(name, exp);
+            parser.TryAddToContext(name, exp);
 
         var result = parser.ParseExpression(expression)!;
         Assert.That(result.IsWellFormatted());

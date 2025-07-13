@@ -6,11 +6,11 @@ namespace LambdaCalculusApp.handlers;
 
 public sealed class EndExecutionHandler : HandlerNodeSync
 {
-    private readonly Regex _endCrypticRegex = new(@"^\s*(#|EXIT|END|FI|THE\s*END|FIN|E)\s*#?\s*$");
+    private readonly Regex _endCrypticRegex = new(@"^\s*(#|EXIT|END|FI|THE\s*END|FIN|E)\s*#?\s*$", RegexOptions.IgnoreCase);
 
     public override HandlerResult HandleOnSubmit(string input)
     {
-        if (!_endCrypticRegex.Match(input.ToUpper()).Success)
+        if (!_endCrypticRegex.Match(input).Success)
             return new HandlerResult(false, new List<string>() ,Flow.Continue);
 
         ManagerInjector.ViewManager.EndSessionView();

@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace LambdaCalculus;
 
-public class DictionaryLambdaDefinition : ILambdaDefinition
+internal class DictionaryLambdaDefinition : ILambdaDefinition
 {
     private readonly Dictionary<string, Expression> _expressionDictionary;
     private readonly Dictionary<string, string> _aliasDictionary;
@@ -12,10 +12,11 @@ public class DictionaryLambdaDefinition : ILambdaDefinition
         _aliasDictionary = new Dictionary<string, string>();
     }
     
-    internal void AddToContext(string name, Expression expression)
+    public bool TryAddToContext(string name, Expression expression)
     {
-        _expressionDictionary.Add(name, expression);
+        var result = _expressionDictionary.TryAdd(name, expression);
         _aliasDictionary.TryAdd(expression.GetHashCode(), name);
+        return result;
     }
     
     public bool TryGetExpression(string name, [NotNullWhen(true)] out Expression? expression)

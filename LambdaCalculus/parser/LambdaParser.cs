@@ -151,9 +151,9 @@ public sealed class LambdaParser
         return Parse(expression, out error, ParseOptions.ParseLambda) as Lambda;
     }
 
-    public void AddToContext(string name, Expression expression)
+    public bool TryAddToContext(string name, Expression expression)
     {
-        _aliasManager.AddToContext(name, expression);
+        return _aliasManager.TryAddToContext(name, expression);
     }
 
     public bool TryGetAlias(Expression expression, out string alias)

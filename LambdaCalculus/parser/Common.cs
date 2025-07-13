@@ -30,7 +30,7 @@ internal static class Helpers
         return Constants.ValidClosedParenthesis.Contains(c);
     }
 
-    private static string _acceptedSymbols = "+-$%&#*^,;:/\\€=¿?¡!";
+    private static string _blackListedSymbols = "λ→()[]{}. \n\t";
     
     public static bool IsValidVariableChar(char c)
     {
@@ -40,8 +40,6 @@ internal static class Helpers
             return true;
         if (c is >= '0' and <= '9')
             return true;
-        if (_acceptedSymbols.Contains(c))
-            return true;
-        return false;
+        return !_blackListedSymbols.Contains(c);
     }
 }
