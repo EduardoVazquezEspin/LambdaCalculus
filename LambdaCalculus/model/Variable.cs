@@ -18,7 +18,7 @@ public class Variable : Expression
 
     public override string GetHashCode()
     {
-        return Definition.GetContextSize().ToString();
+        return Definition.GetHashCode();
     }
 
     public override bool IsWellFormatted()

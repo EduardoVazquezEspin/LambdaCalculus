@@ -51,8 +51,6 @@ internal class FreeVariableBuilder : ParseError
     public override string Message => "";
     
     public int Length { get; set; }
-    
-    internal FreeVariableBuilder() { }
 }
 
 public class FreeVariable : ParseError

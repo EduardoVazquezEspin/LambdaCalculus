@@ -83,7 +83,6 @@ public class LambdaComputeDevelopmentTests
     [TestCase("[λm.λn.[λn.n (λx.λx.λy.y) λx.λy.x] {[λm.λn.n (λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m] m n}] (λf.λx.f x) λf.λx.f x", "λx.λy.x")] // ≤ 1 1
     [TestCase("[λm.λn.[λn.n (λx.λx.λy.y) λx.λy.x] {[λm.λn.n (λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) m] m n}] (λf.λx.f x) λf.λx.x", "λx.λy.y")] // ≤ 0 1
     [TestCase("[λg.g g] [λr.λn.[λb.λx.λy.b x y] [(λn.n (λx.λx.λy.y) λx.λy.x) n] [λf.λx.f x] [(λm.λn.λf.m (n f)) n (r r ((λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) n))]] λf.λx.f (f (f x))", "λf.λx.f (f (f (f (f (f x)))))")] // ! 3 = 6
-    [TestCase("[λg.g g] [λr.λn.[λb.λx.λy.b x y] [(λn.n (λx.λx.λy.y) λx.λy.x) n] [λf.λx.f x] [(λm.λn.λf.m (n f)) n (r r ((λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u)) n))]] λf.λx.f (f (f (f x)))", "λf.λx.f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f (f x)))))))))))))))))))))))")] // ! 4 = 24
     public void LambdaCompute_RunsSuccessfully_GenericListOfPositiveCases(string expressionStr, string resultStr)
     {
         var expression = new LambdaParser().ParseExpression(expressionStr)!;

@@ -56,9 +56,6 @@ internal class OldVariableBuilder : AbstractExpressionBuilder
 
         return Flow.Error;
     }
-    
-
-    public override void BackToYou(Expression lastParsedExpression) { }
 
     public override Expression? Build(out ParseError? error)
     {

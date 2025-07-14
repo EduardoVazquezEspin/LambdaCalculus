@@ -5,10 +5,13 @@ public class CursorController
     public string Text { get; private set; }
     public int Position { get; private set; }
     public int MinPosition => 1;
-    public int MaxPosition => Console.WindowWidth - 3;
+    public int MaxPosition => mocked ? 100 : Console.WindowWidth - 3;
+
+    private bool mocked;
 
     public CursorController()
     {
+        mocked = Environment.GetEnvironmentVariable("TESTING") == "TRUE";
         Text = EmptyString(MaxPosition);
         Position = 1;
         UpdateText();

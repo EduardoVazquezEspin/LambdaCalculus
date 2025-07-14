@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace LambdaCalculus;
 
 public class Lambda : Expression, IParenthesisHolder

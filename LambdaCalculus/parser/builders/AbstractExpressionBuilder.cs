@@ -12,7 +12,7 @@ internal abstract class AbstractExpressionBuilder
     }
     public abstract Flow Analyze(char c);
 
-    public abstract void BackToYou(Expression lastParsedExpression);
+    public virtual void BackToYou(Expression lastParsedExpression) { }
     public abstract Expression? Build(out ParseError? error);
 
     protected virtual Definition? GetLocalVariable(string name)

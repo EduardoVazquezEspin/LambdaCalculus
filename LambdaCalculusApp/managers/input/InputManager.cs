@@ -9,7 +9,7 @@ public class InputManager
 {
     private readonly  List<KeyValuePair<List<OnSubmitHandlerNode>, int>>  _onSubmitHandlers;
     private readonly List<OnTypeHandlerNode> _onTypeHandlers;
-    public CursorController CursorController { get; private set; }
+    public CursorController CursorController { get; protected set; }
 
     public InputManager()
     {
@@ -86,7 +86,7 @@ public class InputManager
         return new HandlerResult(false, new List<string>(), Flow.Continue);
     }
 
-    public async Task Run()
+    public virtual async Task Run()
     {
         CursorController = new CursorController();
         bool end = false;

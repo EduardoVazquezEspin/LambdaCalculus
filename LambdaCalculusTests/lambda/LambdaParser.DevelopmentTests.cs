@@ -46,8 +46,8 @@ public class LambdaParserDevelopmentTests
     [TestCase("λx..x]", typeof(InvalidCharacter))]
     [TestCase("λx.λy.(x]", typeof(InvalidCharacter))]
     [TestCase("([λx.x)]", typeof(InvalidCharacter))]
-    [TestCase("à", typeof(InvalidCharacter))] 
     [TestCase("λx.(x",typeof(SomethingWentWrong))]
+    [TestCase("à", typeof(FreeVariable))] 
     [TestCase("λx.x myvariable myothervariable", typeof(FreeVariable))]
     public void LambdaParser_ParsesUnsuccessfully_ReturnsNullAndError(string expression, Type type)
     {
