@@ -1,10 +1,8 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace LambdaCalculus;
 
 public class Definition : Expression
 {
-    private static uint _serial = 0;
+    private static uint _serial;
     private static uint Serial => _serial++;
     public string Name { get; }
     public int Calls { get; internal set; }
@@ -77,27 +75,8 @@ public class Definition : Expression
         return true;
     }
 
-    public override Expression EtaReduction()
-    {
-        return this;
-    }
-
     public override Definition Copy()
     {
         return new Definition(Name, 0, Id);
     }
-
-    internal override void GetAllBetaReductionOptionsRecursive(List<BetaReductionOption> list, int height, int right, List<CompositionPath> currentPath) { }
-
-    public override Expression BetaReduction(BetaReductionOption option)
-    {
-        return this;
-    }
-
-    internal override Expression Substitute(Definition definition, Expression expression)
-    {
-        return this;
-    }
-
-    internal override void RemoveVariableCalls() { }
 }

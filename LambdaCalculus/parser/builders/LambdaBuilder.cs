@@ -35,13 +35,13 @@ internal class LambdaBuilder : AbstractExpressionBuilder
             case LambdaBuilderState.Lambda:
                 return AnalyzeLambda(c);
             case LambdaBuilderState.Variable:
-                return AnalyzeVariable(c);
+                return AnalyzeVariable();
             case LambdaBuilderState.Point:
                 return AnalyzePoint(c);
             case LambdaBuilderState.Expression:
-                return AnalyzeExpression(c);
+                return AnalyzeExpression();
             case LambdaBuilderState.Finished: default: 
-                return AnalyzeFinished(c);
+                return AnalyzeFinished();
         }
     }
 
@@ -54,7 +54,7 @@ internal class LambdaBuilder : AbstractExpressionBuilder
         return Flow.Continue;
     }
 
-    private Flow AnalyzeVariable(char c)
+    private Flow AnalyzeVariable()
     {
         return Flow.ParseNewVariable;
     }
@@ -68,12 +68,12 @@ internal class LambdaBuilder : AbstractExpressionBuilder
         return Flow.Continue;
     }
 
-    private Flow AnalyzeExpression(char c)
+    private Flow AnalyzeExpression()
     {
         return Flow.ParseExpression;
     }
 
-    private Flow AnalyzeFinished(char c)
+    private Flow AnalyzeFinished()
     {
         return Flow.Build;
     }

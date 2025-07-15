@@ -1,5 +1,5 @@
 using LambdaCalculusApp;
-using LambdaCalculusApp.helpers;
+using LambdaCalculusApp.common;
 
 namespace LambdaCalculusAppTests.mocks;
 

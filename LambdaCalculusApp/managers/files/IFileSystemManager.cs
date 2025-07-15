@@ -1,4 +1,4 @@
-using LambdaCalculusApp.helpers;
+using LambdaCalculusApp.common;
 
 namespace LambdaCalculusApp;
 

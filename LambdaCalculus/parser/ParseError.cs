@@ -2,13 +2,11 @@ namespace LambdaCalculus;
 
 public abstract class ParseError
 {
-    public abstract string Message { get; }
+    public virtual string Message => "";
 }
 
 public class NoError : ParseError
 {
-    public override string Message => "OK";
-    
     internal NoError() { }
 }
 
@@ -48,8 +46,6 @@ public class EmptyExpression : ParseError
 
 internal class FreeVariableBuilder : ParseError
 {
-    public override string Message => "";
-    
     public int Length { get; set; }
 }
 

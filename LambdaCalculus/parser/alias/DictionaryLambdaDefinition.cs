@@ -24,8 +24,8 @@ internal class DictionaryLambdaDefinition : ILambdaDefinition
         return _expressionDictionary.TryGetValue(name, out expression);
     }
 
-    public bool TryGetAlias(Expression expression, [NotNullWhen(true)] out string alias)
+    public bool TryGetAlias(Expression expression, [NotNullWhen(true)] out string? alias)
     {
-        return _aliasDictionary.TryGetValue(expression.GetHashCode(), out alias!);
+        return _aliasDictionary.TryGetValue(expression.GetHashCode(), out alias);
     }
 }

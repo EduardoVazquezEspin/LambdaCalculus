@@ -6,17 +6,37 @@ public abstract class MockInput { }
 
 public class MockInputString : MockInput
 {
-    public string Input { get; set; }
+    public string Input { get; }
+
+    public MockInputString(string str)
+    {
+        Input = str;
+    }
 }
 
 public class MockInputChar : MockInput
 {
-    public char Input { get; set; }
+    public char Input { get; }
+
+    public MockInputChar(char c)
+    {
+        Input = c;
+    }
 }
 
 public class MockInputKey : MockInput
 {
-    public ConsoleKeyInfo Input { get; set; } 
+    public ConsoleKeyInfo Input { get; }
+
+    public MockInputKey(ConsoleKey key, char c = ' ')
+    {
+        Input = new ConsoleKeyInfo(c, key, false, false, false);
+    }
+
+    public MockInputKey(ConsoleKeyInfo info)
+    {
+        Input = info;
+    }
 }
 
 public class MockInputManager : InputManager
@@ -33,9 +53,9 @@ public class MockInputManager : InputManager
             if (it is MockInputKey itKey)
                 return new []{ itKey };
             if (it is MockInputChar itChar)
-                return ToConsoleKeyInfo(itChar.Input).Select(id => new MockInputKey {Input = id});
+                return ToConsoleKeyInfo(itChar.Input).Select(id => new MockInputKey(id));
             var itString = (MockInputString) it;
-            return itString.Input.SelectMany(c => ToConsoleKeyInfo(c).Select(id => new MockInputKey {Input = id}));
+            return itString.Input.SelectMany(c => ToConsoleKeyInfo(c).Select(id => new MockInputKey(id)));
         }).ToList();
         CursorController = new CursorController();
         foreach (var inputObject in inputList)
@@ -57,14 +77,24 @@ public class MockInputManager : InputManager
             case ')':
                 return new[] {new ConsoleKeyInfo(c, ConsoleKey.NumPad9, true, false, false)};
             case '.':
-                return new[] {new ConsoleKeyInfo(c, ConsoleKey.OemPeriod, true, false, false)};
+                return new[] {new ConsoleKeyInfo(c, ConsoleKey.OemPeriod, false, false, false)};
             case ' ':
-                return new[] {new ConsoleKeyInfo(c, ConsoleKey.Spacebar, true, false, false)};
+                return new[] {new ConsoleKeyInfo(c, ConsoleKey.Spacebar, false, false, false)};
             case 'λ':
                 var lKey = new ConsoleKeyInfo('l', ConsoleKey.L, false, false, false);
                 return new[] {lKey, lKey};
+            case '→':
+                return new[]
+                {
+                    new ConsoleKeyInfo('=', ConsoleKey.NumPad0, true, false, false),
+                    new ConsoleKeyInfo('>', ConsoleKey.VolumeMute, false, false, false)
+                };
+            case '+':
+                return new[] {new ConsoleKeyInfo(c, ConsoleKey.OemPlus, false, false, false)};
+            case '*':
+                return new[] {new ConsoleKeyInfo(c, ConsoleKey.OemPlus, true, false, false)};
             default:
-                throw new NotImplementedException();
+                return new[] {new ConsoleKeyInfo(c, ConsoleKey.Help, false, false, false)};
         }
     }
 }

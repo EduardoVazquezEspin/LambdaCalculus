@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace LambdaCalculus;
 
 public sealed class LambdaParser
@@ -156,7 +158,7 @@ public sealed class LambdaParser
         return _aliasManager.TryAddToContext(name, expression);
     }
 
-    public bool TryGetAlias(Expression expression, out string alias)
+    public bool TryGetAlias(Expression expression, [NotNullWhen(true)] out string? alias)
     {
         return _aliasManager.TryGetAlias(expression, out alias);
     }

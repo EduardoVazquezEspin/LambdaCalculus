@@ -1,5 +1,5 @@
 using System.Text.RegularExpressions;
-using LambdaCalculusApp.helpers;
+using LambdaCalculusApp.common;
 
 namespace LambdaCalculusApp;
 

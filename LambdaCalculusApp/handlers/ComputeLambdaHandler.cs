@@ -26,8 +26,7 @@ public class ComputeLambdaHandler : OnSubmitHandlerNodeSync
         }
             
         var result = expression!.Compute();
-        string message;
-        message = ManagerInjector.LambdaManager.Parser.TryGetAlias(result, out var alias) 
+        var message = ManagerInjector.LambdaManager.Parser.TryGetAlias(result, out var alias) 
             ? alias 
             : result.ToString();
             

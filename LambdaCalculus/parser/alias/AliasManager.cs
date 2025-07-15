@@ -31,7 +31,7 @@ internal class AliasManager
         return _defaultLambdaDefinition.TryGetExpression(name, out expression);
     }
 
-    internal bool TryGetAlias(Expression expression, [NotNullWhen(true)] out string alias)
+    internal bool TryGetAlias(Expression expression, [NotNullWhen(true)] out string? alias)
     {
         foreach (var lambdaDefinition in _lambdaDefinitions)
             if (lambdaDefinition.TryGetAlias(expression, out alias))

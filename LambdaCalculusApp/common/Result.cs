@@ -1,4 +1,4 @@
-namespace LambdaCalculusApp.helpers;
+namespace LambdaCalculusApp.common;
 
 public interface IResult
 {
@@ -21,5 +21,5 @@ public class Result<T> : IResult<T>
 {
     public bool Success { get; set; }
     public List<string> Messages { get; set; } = new();
-    public T Value { get; set; }
+    public T Value { get; set; } = default!;
 }

@@ -36,7 +36,7 @@ public class DefineGlobalHandler : OnSubmitHandlerNodeSync
             return new HandlerResult(false, new List<string> {message}, Flow.StopPropagation);
         }
         
-        ManagerInjector.ViewManager.Write($"Successfully defined {name} as {expression.ToString()}");
+        ManagerInjector.ViewManager.Write($"Successfully defined {name} as {expression}");
         return new HandlerResult(true, new List<string>(), Flow.StopPropagation);
     }
 }

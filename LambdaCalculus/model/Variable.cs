@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace LambdaCalculus;
 
 public class Variable : Expression
@@ -25,11 +23,6 @@ public class Variable : Expression
     {
         return GetLocalVariable(Definition.Id) == Definition;
     }
-    
-    public override Expression EtaReduction()
-    {
-        return this;
-    }
 
     public override Variable Copy()
     {
@@ -38,13 +31,6 @@ public class Variable : Expression
             throw new Exception("Something went wrong");
         definition.Calls++;
         return new Variable(definition);
-    }
-
-    internal override void GetAllBetaReductionOptionsRecursive(List<BetaReductionOption> list, int height, int right, List<CompositionPath> currentPath) { }
-
-    public override Expression BetaReduction(BetaReductionOption option)
-    {
-        return this;
     }
 
     internal override Expression Substitute(Definition definition, Expression expression)

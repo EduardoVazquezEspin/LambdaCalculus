@@ -6,15 +6,7 @@ public class ViewManager
     {
         Console.WriteLine("Welcome to the lambda runner environment");
     }
-    
-    public void InvalidCrypticView()
-    {
-        var originalColor = Console.ForegroundColor;
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine("Invalid Input!");
-        Console.ForegroundColor = originalColor;
-    }
-    
+
     public void EndSessionView()
     {
         Console.WriteLine("Bye!");

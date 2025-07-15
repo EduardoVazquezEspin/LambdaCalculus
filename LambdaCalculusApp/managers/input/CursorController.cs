@@ -13,7 +13,7 @@ public class CursorController
     {
         mocked = Environment.GetEnvironmentVariable("TESTING") == "TRUE";
         Text = EmptyString(MaxPosition);
-        Position = 1;
+        Position = MinPosition;
         UpdateText();
     }
 
@@ -66,7 +66,7 @@ public class CursorController
     public void PressEnter()
     {
         Text = EmptyString(MaxPosition);
-        Position = 1;
+        Position = MinPosition;
         UpdateText();
     }
 
@@ -89,7 +89,7 @@ public class CursorController
     {
         int currentLineCursor = Console.CursorTop;
         Console.SetCursorPosition(0, Console.CursorTop);
-        Console.Write(new string(' ', Console.WindowWidth)); 
+        Console.Write(new string(' ', MaxPosition)); 
         Console.SetCursorPosition(0, currentLineCursor);
     }
 }

@@ -26,9 +26,9 @@ internal class ParenthesisBuilder : AbstractExpressionBuilder
         return _state switch
         {
             ParenthesisBuilderState.ReadingOpen => AnalyzeReadingOpen(c),
-            ParenthesisBuilderState.ReadingExpression => AnalyzeReadingExpression(c),
+            ParenthesisBuilderState.ReadingExpression => AnalyzeReadingExpression(),
             ParenthesisBuilderState.ReadingClosed => AnalyzeReadingClosed(c),
-            ParenthesisBuilderState.Finished => AnalyzeFinished(c),
+            ParenthesisBuilderState.Finished => AnalyzeFinished(),
             _ => Flow.Error
         };
     }
@@ -42,7 +42,7 @@ internal class ParenthesisBuilder : AbstractExpressionBuilder
         return Flow.Continue;
     }
 
-    private Flow AnalyzeReadingExpression(char c)
+    private Flow AnalyzeReadingExpression()
     {
         return Flow.ParseExpression;
     }
@@ -58,15 +58,13 @@ internal class ParenthesisBuilder : AbstractExpressionBuilder
         return Flow.Continue;
     }
 
-    private Flow AnalyzeFinished(char c)
+    private Flow AnalyzeFinished()
     {
         return Flow.Build;
     }
 
     public override void BackToYou(Expression lastParsedExpression)
     {
-        if (_state != ParenthesisBuilderState.ReadingExpression)
-            return;
         _expression = lastParsedExpression;
         _state = ParenthesisBuilderState.ReadingClosed;
     }

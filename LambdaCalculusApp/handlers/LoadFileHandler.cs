@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 using LambdaCalculus;
-using LambdaCalculusApp.helpers;
+using LambdaCalculusApp.common;
 using LambdaCalculusApp.managers;
 using LambdaCalculusApp.managers.input;
 
@@ -74,7 +74,7 @@ public class LoadFileHandler : OnSubmitHandlerNodeSync
         var lambda = match.Groups["lambda"].Value;
 
         var expression = ManagerInjector.LambdaManager.Parser.ParseExpression(lambda, out var error)!;
-        if (error is not LambdaCalculus.NoError)
+        if (error is not NoError)
             return new Result<KeyValuePair<string, Expression>>
             {
                 Success = false,

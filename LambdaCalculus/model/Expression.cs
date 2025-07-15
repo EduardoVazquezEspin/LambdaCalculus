@@ -1,6 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Net;
-
 namespace LambdaCalculus;
 
 public abstract class Expression
@@ -42,7 +39,10 @@ public abstract class Expression
         return Parent?.GetLocalVariableByName(name);
     }
 
-    public abstract Expression EtaReduction();
+    public virtual Expression EtaReduction()
+    {
+        return this;
+    }
     
     public abstract Expression Copy();
     public List<BetaReductionOption> GetAllBetaReductionOptions()
@@ -52,11 +52,18 @@ public abstract class Expression
         return list;
     }
 
-    internal abstract void GetAllBetaReductionOptionsRecursive(List<BetaReductionOption> list, int height, int right, List<CompositionPath> currentPath);
-    public abstract Expression BetaReduction(BetaReductionOption option);
+    internal virtual void GetAllBetaReductionOptionsRecursive(List<BetaReductionOption> list, int height, int right, List<CompositionPath> currentPath) { }
 
-    internal abstract Expression Substitute(Definition definition, Expression expression);
-    internal abstract void RemoveVariableCalls();
+    public virtual Expression BetaReduction(BetaReductionOption option)
+    {
+        return this;
+    }
+
+    internal virtual Expression Substitute(Definition definition, Expression expression)
+    {
+        return this;
+    }
+    internal virtual void RemoveVariableCalls() { }
     
     public Expression Compute()
     {

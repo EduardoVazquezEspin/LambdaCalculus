@@ -48,10 +48,9 @@ public class ConsoleApp
             new DefineGlobalHandler(ManagerInjector),
             new LoadFileHandler(ManagerInjector)
         );
-        inputManager.AddOnSubmitHandler(new ComputeLambdaHandler(ManagerInjector), new HandlerOptions {Priority = 500});
         inputManager.AddOnSubmitHandler(new EndExecutionHandler(ManagerInjector), new HandlerOptions {Priority = 499});
-        inputManager.AddOnSubmitHandler(new InvalidCrypticHandler(ManagerInjector), new HandlerOptions {Priority = 1000});
-
+        inputManager.AddOnSubmitHandler(new ComputeLambdaHandler(ManagerInjector), new HandlerOptions {Priority = 500});
+        
         return this;
     }
     
